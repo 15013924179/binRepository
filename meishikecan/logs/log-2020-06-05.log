@@ -1,0 +1,27 @@
+2020-06-05 22:31:35.174 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Starting MeishikecanApplication on LAPTOP-HAA808CV with PID 5340 (D:\meishikecan\target\classes started by bin in D:\meishikecan)
+2020-06-05 22:31:35.179 [main] INFO  com.bin.meishikecan.MeishikecanApplication - No active profile set, falling back to default profiles: default
+2020-06-05 22:31:36.374 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-06-05 22:31:36.377 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2020-06-05 22:31:36.409 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13ms. Found 0 Redis repository interfaces.
+2020-06-05 22:31:36.915 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2020-06-05 22:31:36.922 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2020-06-05 22:31:36.923 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-06-05 22:31:36.924 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2020-06-05 22:31:37.020 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-06-05 22:31:37.020 [main] INFO  org.springframework.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 1809 ms
+2020-06-05 22:31:37.671 [main] INFO  com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure - Init DruidDataSource
+2020-06-05 22:31:37.764 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2020-06-05 22:31:38.161 [main] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-05 22:31:38.341 [main] WARN  org.springframework.boot.starter.redis.RedisStarterDeprecationWarningAutoConfiguration - spring-boot-starter-redis is deprecated as of Spring Boot 1.4, please migrate to spring-boot-starter-data-redis
+2020-06-05 22:31:38.374 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Attempting to connect to: [120.77.208.47:5672]
+2020-06-05 22:31:38.434 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#37c5284a:0/SimpleConnection@592a1882 [delegate=amqp://rabbitmq@120.77.208.47:5672/, localPort= 63689]
+2020-06-05 22:31:39.109 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2020-06-05 22:31:39.130 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path ''
+2020-06-05 22:31:39.132 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Started MeishikecanApplication in 4.393 seconds (JVM running for 6.524)
+2020-06-05 22:54:37.351 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-05 22:54:37.784 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-05 22:54:37.793 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-05 22:54:37.794 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-05 22:54:37.800 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-05 22:54:37.828 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-05 22:54:37.836 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.

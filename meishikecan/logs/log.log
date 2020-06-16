@@ -1,0 +1,73 @@
+2020-06-08 22:43:14.752 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Starting MeishikecanApplication on LAPTOP-HAA808CV with PID 2652 (D:\meishikecan\target\classes started by bin in D:\meishikecan)
+2020-06-08 22:43:14.762 [main] INFO  com.bin.meishikecan.MeishikecanApplication - No active profile set, falling back to default profiles: default
+2020-06-08 22:43:16.468 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-06-08 22:43:16.472 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2020-06-08 22:43:16.541 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19ms. Found 0 Redis repository interfaces.
+2020-06-08 22:43:17.384 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2020-06-08 22:43:17.396 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2020-06-08 22:43:17.396 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-06-08 22:43:17.397 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2020-06-08 22:43:17.536 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-06-08 22:43:17.536 [main] INFO  org.springframework.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 2725 ms
+2020-06-08 22:43:18.555 [main] INFO  com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure - Init DruidDataSource
+2020-06-08 22:43:18.704 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2020-06-08 22:43:19.429 [main] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-08 22:43:19.687 [main] WARN  org.springframework.boot.starter.redis.RedisStarterDeprecationWarningAutoConfiguration - spring-boot-starter-redis is deprecated as of Spring Boot 1.4, please migrate to spring-boot-starter-data-redis
+2020-06-08 22:43:19.735 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Attempting to connect to: [120.77.208.47:5672]
+2020-06-08 22:43:19.909 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#40c06358:0/SimpleConnection@c262f2f [delegate=amqp://rabbitmq@120.77.208.47:5672/, localPort= 53979]
+2020-06-08 22:43:20.764 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2020-06-08 22:43:20.785 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path ''
+2020-06-08 22:43:20.787 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Started MeishikecanApplication in 6.769 seconds (JVM running for 10.893)
+2020-06-08 22:51:07.404 [http-nio-8081-exec-2] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-06-08 22:51:07.405 [http-nio-8081-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2020-06-08 22:51:07.412 [http-nio-8081-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2020-06-08 22:51:07.435 [http-nio-8081-exec-2] INFO  com.bin.meishikecan.controller.DemoController - info
+2020-06-08 22:51:07.435 [http-nio-8081-exec-2] WARN  com.bin.meishikecan.controller.DemoController - warn
+2020-06-08 22:51:07.435 [http-nio-8081-exec-2] ERROR com.bin.meishikecan.controller.DemoController - error
+2020-06-08 22:54:22.007 [AMQP Connection 120.77.208.47:5672] WARN  com.rabbitmq.client.impl.ForgivingExceptionHandler - An unexpected connection driver error occured (Exception message: Connection reset)
+2020-06-08 22:54:25.872 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.370 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.552 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.695 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.821 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.822 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#5-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@3335afcf: tags=[[amq.ctag-Sy2-I4rRc9thc72O6G58pw]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,7), conn: Proxy@5112b7 Shared Rabbit Connection: SimpleConnection@c262f2f [delegate=amqp://rabbitmq@120.77.208.47:5672/, localPort= 53979], acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:26.871 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:26.924 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 22:54:27.101 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#5-2] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Attempting to connect to: [120.77.208.47:5672]
+2020-06-08 22:54:27.406 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#1-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@5df92089: tags=[[amq.ctag-jkiBmXDbLzRWfFcCtcvtvw]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,3), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:27.407 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#3-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@1b475663: tags=[[amq.ctag-oW7inMSV7KV-TZkRRoq4Lw]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,5), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:27.407 [simpleMessageListenerContainer-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@619c3546: tags=[[amq.ctag-oOOpLDg6G7Fm0fs6l-xTtg, amq.ctag-4ePh36Oi3jhrgiReYDjD9A]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,1), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=MANUAL local queue size=0
+2020-06-08 22:54:27.407 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#4-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@6b24ddd7: tags=[[amq.ctag-X7Asey_civJio6H70Y59sg]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,6), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:27.406 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#2-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@45571cfc: tags=[[amq.ctag-hkUdExHSwDPqeKU-kuuUvw]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,4), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:27.407 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-1] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Restarting Consumer@505f45cc: tags=[[amq.ctag-YH963Ghz9u7UXtUGoQPipw]], channel=Cached Rabbit Channel: PublisherCallbackChannelImpl: AMQChannel(amqp://rabbitmq@120.77.208.47:5672/,2), conn: Proxy@5112b7 Shared Rabbit Connection: null, acknowledgeMode=AUTO local queue size=0
+2020-06-08 22:54:27.564 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#5-2] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#40c06358:1/SimpleConnection@794d7796 [delegate=amqp://rabbitmq@120.77.208.47:5672/, localPort= 54380]
+2020-06-08 23:52:44.806 [AMQP Connection 120.77.208.47:5672] WARN  com.rabbitmq.client.impl.ForgivingExceptionHandler - An unexpected connection driver error occured (Exception message: Connection reset)
+2020-06-08 23:52:44.809 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.809 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.812 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.814 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.815 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.816 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:44.818 [AMQP Connection 120.77.208.47:5672] ERROR org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Channel shutdown: connection error
+2020-06-08 23:52:45.113 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.113 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.114 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-08 23:52:45.115 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2020-06-08 23:52:45.121 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
+2020-06-08 23:52:45.122 [SpringContextShutdownHook] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+2020-06-08 23:52:45.123 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Shutdown ignored - container is not active already
