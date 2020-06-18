@@ -7,7 +7,8 @@ import net.sf.json.JSONObject;
 public enum  Constants {
 
     OK(20000, "OK"),
-    isNotNull(40000,"参数不能为空");
+    isNotNull(40000,"参数不能为空"),
+    SystemError(50000,"系统错误");
 
     private final int code;
 

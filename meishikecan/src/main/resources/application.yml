@@ -58,6 +58,12 @@ spring:
     publisher-confirms: true
     #确认消息已发送到队列(Queue)
     publisher-returns: true
+  data:
+    elasticsearch:
+      cluster-name: my-elastic
+      cluster-nodes: 120.77.208.47:9300
+      repositories:
+        enabled: true
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

@@ -22,6 +22,12 @@ public class ReturnJson {
         return appConstants.toJson();
     }
 
+    public static String error()
+    {
+        Constants appConstants = Constants.SystemError;
+        return appConstants.toJson();
+    }
+
     public static String success(Object data)
     {
         Constants appConstants = Constants.OK;
