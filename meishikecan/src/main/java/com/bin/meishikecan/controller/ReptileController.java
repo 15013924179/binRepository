@@ -3,7 +3,6 @@ package com.bin.meishikecan.controller;
 import com.bin.meishikecan.config.PoolingHttpClientConnectionManagerConfig;
 import com.bin.meishikecan.entity.JdItem;
 import com.bin.meishikecan.service.JdItemService;
-import com.bin.meishikecan.utils.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -19,15 +18,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.image.ImageProducer;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * 爬虫测试
+ *
+ */
 @RestController
 @RequestMapping("/reptile")
 public class ReptileController {
@@ -143,11 +142,7 @@ public class ReptileController {
     }
 
 
-    //      元素获取
-//1.	根据id查询元素getElementById
-//2.	根据标签获取元素getElementsByTag
-//3.	根据class获取元素getElementsByClass
-//4.	根据属性获取元素getElementsByAttribute
+    //元素获取
     @GetMapping("/getJsoupUrl")
     public String getJsoupUrl() throws Exception {
         // 解析url地址
