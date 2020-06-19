@@ -43,7 +43,8 @@ public class BlogController {
     public String updateById(@RequestBody BlogModel blogModel) {
         String id = blogModel.getId();
         if (StringUtils.isEmpty(id))
-            return ReturnJson.error();;
+            return ReturnJson.error();
+        ;
         blogService.save(blogModel);
         return ReturnJson.success();
     }
