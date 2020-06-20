@@ -4,6 +4,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 测试卷Interrupt()的作用
+ */
 public class InterruptTest extends Thread {
     public void run() {
         while (!isInterrupted()){ //非阻塞过程中通过判断中断标志来退出
