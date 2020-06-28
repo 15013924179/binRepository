@@ -206,6 +206,14 @@
             <version>2.6</version>
         </dependency>
 
+        <!-- htmlunit -->
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.36.0</version>
+        </dependency>
+
+
 
     </dependencies>
 

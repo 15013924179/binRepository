@@ -1,9 +1,14 @@
 package com.bin.meishikecan.controller;
 
+import com.bin.meishikecan.config.HtmlUintUtil;
 import com.bin.meishikecan.config.PoolingHttpClientConnectionManagerConfig;
 import com.bin.meishikecan.entity.JdItem;
 import com.bin.meishikecan.service.JdItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLDocument;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,13 +24,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 /**
  * 爬虫测试
- *
  */
 @RestController
 @RequestMapping("/reptile")
@@ -225,6 +230,52 @@ public class ReptileController {
             this.jdItemService.save(item);
 
         }
+    }
+
+
+    /**
+     * htmlunit爬虫
+     */
+    @GetMapping("/init")
+    public void htmlunit() throws Exception {
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        WebClient webClient = HtmlUintUtil.getWebClient();
+        int pageNumber = 1;
+        HtmlPage page = null;
+        while (true) {
+            page = webClient.getPage("https://you.ctrip.com/searchsite/travels/?query=%e9%87%8d%e5%ba%86&isAnswered=&isRecommended=&publishDate=&PageNo=" + pageNumber);
+            if (page == null) {
+                break;
+            }
+            if (pageNumber == 2) {
+                break;
+            }
+            List<HtmlElement> list = page.getByXPath("/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li");
+            for (HtmlElement h:list){
+//                HtmlElement a1 = h.getElementsByTagName("a").get(0);
+//                HtmlElement a2 = h.getElementsByTagName("a").get(1);
+//                System.out.println("title:"+a2.asText());
+//                System.out.println("image:"+a1.getFirstElementChild().getAttribute("src"));
+//                System.out.println("url:https://you.ctrip.com"+a1.getAttribute("href"));
+                  HtmlPage detailPage = webClient.getPage("https://you.ctrip.com" + h.getElementsByTagName("a").get(0).getAttribute("href"));
+                  HtmlElement firstByXPath = detailPage.getFirstByXPath("/html/body/div[2]/div[4]/div[1]/div[1]/div[2]");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                System.out.println(firstByXPath.asText());
+            }
+            pageNumber++;
+        }
+
+
     }
 
 

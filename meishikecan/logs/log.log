@@ -2055,3 +2055,39 @@ java.lang.IllegalArgumentException: argument "content" is null
 2020-06-19 17:16:25.921 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2020-06-19 17:16:25.929 [http-nio-8081-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 7 ms
 2020-06-19 17:37:17.892 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
+2020-06-19 22:50:04.727 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Starting MeishikecanApplication on LAPTOP-HAA808CV with PID 13616 (D:\binRepository\meishikecan\target\classes started by bin in D:\binRepository\meishikecan)
+2020-06-19 22:50:04.732 [main] INFO  com.bin.meishikecan.MeishikecanApplication - No active profile set, falling back to default profiles: default
+2020-06-19 22:50:06.061 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-06-19 22:50:06.064 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2020-06-19 22:50:06.138 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 61ms. Found 1 Elasticsearch repository interfaces.
+2020-06-19 22:50:06.142 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-06-19 22:50:06.143 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2020-06-19 22:50:06.157 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13ms. Found 0 Reactive Elasticsearch repository interfaces.
+2020-06-19 22:50:06.166 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-06-19 22:50:06.167 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2020-06-19 22:50:06.193 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.bin.meishikecan.service.BlogService. If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository.
+2020-06-19 22:50:06.193 [main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 17ms. Found 0 Redis repository interfaces.
+2020-06-19 22:50:06.766 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2020-06-19 22:50:06.776 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2020-06-19 22:50:06.776 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2020-06-19 22:50:06.777 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2020-06-19 22:50:06.899 [main] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2020-06-19 22:50:06.899 [main] INFO  org.springframework.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 2128 ms
+2020-06-19 22:50:08.167 [main] INFO  org.elasticsearch.plugins.PluginsService - no modules loaded
+2020-06-19 22:50:08.168 [main] INFO  org.elasticsearch.plugins.PluginsService - loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-06-19 22:50:08.168 [main] INFO  org.elasticsearch.plugins.PluginsService - loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-06-19 22:50:08.168 [main] INFO  org.elasticsearch.plugins.PluginsService - loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-06-19 22:50:08.168 [main] INFO  org.elasticsearch.plugins.PluginsService - loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-06-19 22:50:08.168 [main] INFO  org.elasticsearch.plugins.PluginsService - loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-06-19 22:50:09.955 [main] INFO  org.springframework.data.elasticsearch.client.TransportClientFactoryBean - Adding transport node : 120.77.208.47:9300
+2020-06-19 22:50:13.123 [main] ERROR org.springframework.data.elasticsearch.repository.support.AbstractElasticsearchRepository - failed to load elasticsearch nodes : org.elasticsearch.client.transport.NoNodeAvailableException: None of the configured nodes are available: [{#transport#-1}{OQPSG91UQfWdml5Y7Kt7Gg}{120.77.208.47}{120.77.208.47:9300}]
+2020-06-19 22:50:13.183 [main] INFO  com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure - Init DruidDataSource
+2020-06-19 22:50:13.450 [main] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2020-06-19 22:50:13.963 [main] INFO  org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-19 22:50:14.280 [main] WARN  org.springframework.boot.starter.redis.RedisStarterDeprecationWarningAutoConfiguration - spring-boot-starter-redis is deprecated as of Spring Boot 1.4, please migrate to spring-boot-starter-data-redis
+2020-06-19 22:50:14.316 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Attempting to connect to: [120.77.208.47:5672]
+2020-06-19 22:50:14.392 [main] INFO  org.springframework.amqp.rabbit.connection.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#1283ca23:0/SimpleConnection@4f1a5b93 [delegate=amqp://rabbitmq@120.77.208.47:5672/, localPort= 57150]
+2020-06-19 22:50:15.202 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2020-06-19 22:50:15.227 [main] INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path ''
+2020-06-19 22:50:15.229 [main] INFO  com.bin.meishikecan.MeishikecanApplication - Started MeishikecanApplication in 11.013 seconds (JVM running for 13.908)
+2020-06-19 22:52:40.635 [SpringContextShutdownHook] INFO  org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer - Waiting for workers to finish.
