@@ -32,6 +32,9 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.util.List;
 
+/**
+ * 基本测试
+ */
 @RestController
 @Slf4j
 public class DemoController {
@@ -183,6 +186,8 @@ public class DemoController {
 
     }
 
+
+//TODO 这里lucene的包和es的包中的lucene依赖冲突，暂注释
     /**
      * 1.lucene创建索引
      *

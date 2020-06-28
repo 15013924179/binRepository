@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
+/**
+ * 测试父类子类构造器调用
+ */
 public class Test {
 
     public Test(){

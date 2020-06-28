@@ -18,6 +18,9 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ *  resttemple异常处理器自定义
+ */
 public class ReturnErrorJsonHandler extends DefaultResponseErrorHandler {
 
 
