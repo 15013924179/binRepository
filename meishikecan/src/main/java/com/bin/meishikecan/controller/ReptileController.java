@@ -1,6 +1,8 @@
 package com.bin.meishikecan.controller;
 
 
+import com.bin.meishikecan.entity.TravelDocumentMongodb;
+import com.bin.meishikecan.repo.TravelDocumentMongodbRepo;
 import com.bin.meishikecan.repo.TravelDocumentRepo;
 import com.bin.meishikecan.entity.TravelDocument;
 import com.bin.meishikecan.config.HtmlUintUtil;
@@ -43,6 +45,8 @@ public class ReptileController {
     private JdItemService jdItemService;
     @Autowired
     private TravelDocumentRepo travelDocumentRepo;
+    @Autowired
+    private TravelDocumentMongodbRepo travelDocumentMongodbRepo;
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -326,8 +330,94 @@ public class ReptileController {
         System.out.println("插入完成");
     }
 
-    public static void main(String[] args) throws Exception {
-
+    /**
+     * htmlunit爬虫
+     */
+    @GetMapping("/htmlunitByMongodb")
+    public void htmlunitByMongodb() throws Exception {
+//获取所有列表页
+        List<TravelDocumentMongodb> list = new ArrayList<>();
+        WebClient webClient = HtmlUintUtil.getWebClient();
+        int pageNumber = 1;
+        HtmlPage page = webClient.getPage("https://you.ctrip.com/searchsite/Travels?query=%25e6%25b7%25b1%25e5%259c%25b3%25e4%25ba%25ba%25e6%25b0%2591%25e5%2585%25ac%25e5%259b%25ad");
+        while (true) {
+            List<DomElement> doms = page.getByXPath("/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li");
+            DomElement button = page.getFirstByXPath("//*[text()='下一页'][contains(@class,'left_arrow')]");
+            for (DomElement h : doms) {
+                HtmlElement a = h.getElementsByTagName("a").get(1);
+                HtmlAnchor htmlAnchor = (HtmlAnchor) a;
+                TravelDocumentMongodb document = new TravelDocumentMongodb();
+                document.setTitle(a.getTextContent());
+                document.setUrl("https://you.ctrip.com/" + htmlAnchor.getHrefAttribute());
+                list.add(document);
+            }
+            if (button == null) {
+                break;
+            }
+            pageNumber++;
+            page = button.click();
+        }
+        System.out.println("总页数：" + pageNumber);
+        System.out.println("总数量：" + list.size());
+        //遍历所有详情页
+        for (TravelDocumentMongodb td : list) {
+            HtmlPage detailPage = webClient.getPage(td.getUrl());
+            //用户名
+            Optional.ofNullable(detailPage.getElementById("authorDisplayName"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setAuthor);
+            //用户头像
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'user_img')]/img"))
+                    .map(x -> {
+                        return x.getAttribute("src");
+                    })
+                    .ifPresent(td::setAuthorImage);
+            //喜欢数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@id,'TitleLike')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setLikeNumber);
+            //评论数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'link_comment')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setCommentNumber);
+            //浏览数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'link_browse')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setBrowseNumber);
+            //首页图片
+            Optional.ofNullable(detailPage.getElementById("ctd_cover"))
+                    .map(x -> {
+                        return x.getAttribute("src");
+                    })
+                    .ifPresent(td::setTopImage);
+            //更新时间
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("/html/body/div[2]/div[3]/div/div[2]/p"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .map(x -> {
+                        return x.replace("更新时间：", "");
+                    })
+                    .ifPresent(td::setUpdateTime);
+            //创建时间
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("/html/body/div[2]/div[4]/div[1]/div[1]/div[2]/h3"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .map(x -> {
+                        return x.replace("发表于", "");
+                    })
+                    .ifPresent(td::setCreateTime);
+            //内容
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[@class='ctd_content']"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setContent);
+            travelDocumentMongodbRepo.save(td);
+        }
+        System.out.println("插入完成");
     }
 
 

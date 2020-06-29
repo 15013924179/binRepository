@@ -71,6 +71,9 @@ spring:
       cluster-nodes: 120.77.208.47:9300
       repositories:
         enabled: true
+    mongodb:
+      host: 192.168.124.4
+      database: test
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
