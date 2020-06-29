@@ -22,7 +22,6 @@ public class HtmlUintUtil {
         webClient.getOptions().setRedirectEnabled(true);
         //很重要，设置支持AJAX
         webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-
         //关闭  JS执行出错 异常
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         //设置请求超时时间
@@ -32,7 +31,7 @@ public class HtmlUintUtil {
         //当HTTP的状态非200时是否抛出异常
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
 
-        webClient.waitForBackgroundJavaScript(12000);
+        webClient.waitForBackgroundJavaScript(3000);
 
     }
 

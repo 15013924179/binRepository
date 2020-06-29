@@ -1,14 +1,15 @@
 package com.bin.meishikecan.controller;
 
+
+import com.bin.meishikecan.repo.TravelDocumentRepo;
+import com.bin.meishikecan.entity.TravelDocument;
 import com.bin.meishikecan.config.HtmlUintUtil;
 import com.bin.meishikecan.config.PoolingHttpClientConnectionManagerConfig;
 import com.bin.meishikecan.entity.JdItem;
 import com.bin.meishikecan.service.JdItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLDocument;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -40,6 +41,8 @@ public class ReptileController {
     private PoolingHttpClientConnectionManagerConfig httpUtils;
     @Autowired
     private JdItemService jdItemService;
+    @Autowired
+    private TravelDocumentRepo travelDocumentRepo;
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -236,45 +239,94 @@ public class ReptileController {
     /**
      * htmlunit爬虫
      */
-    @GetMapping("/init")
+    @GetMapping("/htmlunit")
     public void htmlunit() throws Exception {
-
+//获取所有列表页
+        List<TravelDocument> list = new ArrayList<>();
+        WebClient webClient = HtmlUintUtil.getWebClient();
+        int pageNumber = 1;
+        HtmlPage page = webClient.getPage("https://you.ctrip.com/searchsite/Travels?query=%25e6%25b7%25b1%25e5%259c%25b3%25e4%25ba%25ba%25e6%25b0%2591%25e5%2585%25ac%25e5%259b%25ad");
+        while (true) {
+            List<DomElement> doms = page.getByXPath("/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li");
+            DomElement button = page.getFirstByXPath("//*[text()='下一页'][contains(@class,'left_arrow')]");
+            for (DomElement h : doms) {
+                HtmlElement a = h.getElementsByTagName("a").get(1);
+                HtmlAnchor htmlAnchor = (HtmlAnchor) a;
+                TravelDocument document = new TravelDocument();
+                document.setTitle(a.getTextContent());
+                document.setUrl("https://you.ctrip.com/" + htmlAnchor.getHrefAttribute());
+                list.add(document);
+            }
+            if (button == null) {
+                break;
+            }
+            pageNumber++;
+            page = button.click();
+        }
+        System.out.println("总页数：" + pageNumber);
+        System.out.println("总数量：" + list.size());
+        //遍历所有详情页
+        for (TravelDocument td : list) {
+            HtmlPage detailPage = webClient.getPage(td.getUrl());
+            //用户名
+            Optional.ofNullable(detailPage.getElementById("authorDisplayName"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setAuthor);
+            //用户头像
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'user_img')]/img"))
+                    .map(x -> {
+                        return x.getAttribute("src");
+                    })
+                    .ifPresent(td::setAuthorImage);
+            //喜欢数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@id,'TitleLike')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setLikeNumber);
+            //评论数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'link_comment')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setCommentNumber);
+            //浏览数
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[contains(@class,'link_browse')]/span"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setBrowseNumber);
+            //首页图片
+            Optional.ofNullable(detailPage.getElementById("ctd_cover"))
+                    .map(x -> {
+                        return x.getAttribute("src");
+                    })
+                    .ifPresent(td::setTopImage);
+            //更新时间
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("/html/body/div[2]/div[3]/div/div[2]/p"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .map(x -> {
+                        return x.replace("更新时间：", "");
+                    })
+                    .ifPresent(td::setUpdateTime);
+            //创建时间
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("/html/body/div[2]/div[4]/div[1]/div[1]/div[2]/h3"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .map(x -> {
+                        return x.replace("发表于", "");
+                    })
+                    .ifPresent(td::setCreateTime);
+            //内容
+            Optional.ofNullable((DomElement) detailPage.getFirstByXPath("//*[@class='ctd_content']"))
+                    .map(DomElement::getTextContent)
+                    .map(String::trim)
+                    .ifPresent(td::setContent);
+            travelDocumentRepo.save(td);
+        }
+        System.out.println("插入完成");
     }
 
     public static void main(String[] args) throws Exception {
-        WebClient webClient = HtmlUintUtil.getWebClient();
-        int pageNumber = 1;
-        HtmlPage page = null;
-        while (true) {
-            page = webClient.getPage("https://you.ctrip.com/searchsite/travels/?query=%e9%87%8d%e5%ba%86&isAnswered=&isRecommended=&publishDate=&PageNo=" + pageNumber);
-            if (page == null) {
-                break;
-            }
-            if (pageNumber == 2) {
-                break;
-            }
-            List<HtmlElement> list = page.getByXPath("/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li");
-            for (HtmlElement h:list){
-//                HtmlElement a1 = h.getElementsByTagName("a").get(0);
-//                HtmlElement a2 = h.getElementsByTagName("a").get(1);
-//                System.out.println("title:"+a2.asText());
-//                System.out.println("image:"+a1.getFirstElementChild().getAttribute("src"));
-//                System.out.println("url:https://you.ctrip.com"+a1.getAttribute("href"));
-                  HtmlPage detailPage = webClient.getPage("https://you.ctrip.com" + h.getElementsByTagName("a").get(0).getAttribute("href"));
-                  HtmlElement firstByXPath = detailPage.getFirstByXPath("/html/body/div[2]/div[4]/div[1]/div[1]/div[2]");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                System.out.println(firstByXPath.asText());
-            }
-            pageNumber++;
-        }
-
 
     }
 
