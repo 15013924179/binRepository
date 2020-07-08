@@ -30,16 +30,18 @@ public class TripadvisorCrawsService {
         List<Document> words = mongoTemplate.findAll(Document.class, "taiguo_city");
         WebDriver webDriver = MySeleniumUtils.getWebDriver();
         int wordNum = 1;
-        for (Document word : words) {
+        for (int i = 0; i < words.size(); i++) {
             log.info("爬取第" + wordNum + "个地点关键字");
-            String name = (String) word.get("name");
+            String name = (String) words.get(i).get("name");
             String pageUrl = url + name;
             webDriver.get(pageUrl);
             Thread.sleep(2000);
 
-            crawType(2, "tripadvisor_travel", webDriver);
+
+            crawType(2, "tripadvisor_hotel", webDriver);
             crawType(3, "tripadvisor_restaurant", webDriver);
-            crawType(4, "tripadvisor_hotel", webDriver);
+            crawType(4, "tripadvisor_travel", webDriver);
+
             wordNum++;
         }
     }
@@ -65,13 +67,14 @@ public class TripadvisorCrawsService {
         WebElement button = webDriver.findElement(By.xpath("//*[@id=\"search-filters\"]/ul/li[" + type + "]"));
         Thread.sleep(1000);
         button.click();
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         Pattern pattern = Pattern.compile("/.*.html");
         //最大页数
         int maxPage = Integer.parseInt(webDriver.findElement(By.xpath("//*[contains(@class,\"pageNumbers\")]/a[last()]")).getText());
         WebElement nextButton = webDriver.findElement(By.xpath("//*[contains(@class,\"ui_button nav next primary\")]"));
-        for (int i = 1; i <= maxPage; i++) {
-            log.info("爬取第" + i + "页");
+        int page = 1;
+        while (true) {
+            log.info("爬取第" + page + "页");
             //列表项
             List<WebElement> elements = webDriver.findElements(By.xpath("//*[@class=\"location-meta-block\"]"));
 
@@ -99,12 +102,12 @@ public class TripadvisorCrawsService {
                 String oldUrl = (String) document.get("url");
                 boolean exists = mongoTemplate.exists(new Query(Criteria.where("url").is(oldUrl)), Document.class, table);
                 if (exists) {
-                    log.info("该列表项已经爬取过");
+//                    log.info("该列表项已经爬取过");
                     continue;
                 }
 
                 //名称
-                Optional.ofNullable(webElement)
+                Optional.ofNullable(webElement.findElement(By.xpath("./div[1]")))
                         .map(WebElement::getText)
                         .map(String::trim)
                         .ifPresent(x -> {
@@ -125,6 +128,10 @@ public class TripadvisorCrawsService {
                 mongoTemplate.save(document, table);
             }
 
+            if (page >= maxPage) {
+                break;
+            }
+
             //翻页
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView();", nextButton);
             Thread.sleep(1000);
@@ -132,6 +139,134 @@ public class TripadvisorCrawsService {
             Thread.sleep(4000);
             //下一页按钮
             nextButton = webDriver.findElement(By.xpath("//*[contains(@class,\"ui_button nav next primary\")]"));
+            page++;
         }
     }
+
+    public void crawDetailPageHotel() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        log.info("旅店开始爬取详情页");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_hotel");
+        for (Document document : documents) {
+            webDriver.get((String) document.get("url"));
+            Thread.sleep(2000);
+
+            //处理数据
+            //1.判断是否是泰国数据
+            String title = (String) document.get("title");
+            String address = (String) document.get("address");
+            boolean bool1 = title.contains("ไทย");
+            boolean bool2 = address.contains("ไทย");
+            if (!(bool1 || bool2)) {
+                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_hotel");
+                log.info("删除一条不符合的数据");
+                continue;
+            }
+
+
+            //保存联系
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"ui_icon phone _2JUCGp0v _37ahZ22y\")]/../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("contact", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            document.put("update_time", LocalDateTime.now());
+            document.put("is_craw", true);
+            mongoTemplate.save(document, "tripadvisor_hotel");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+    public void crawDetailPageRestan() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        log.info("餐厅：开始爬取详情页");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_restaurant");
+        for (Document document : documents) {
+            webDriver.get((String) document.get("url"));
+            Thread.sleep(2000);
+
+            //处理数据
+            //1.判断是否是泰国数据
+            String title = (String) document.get("title");
+            String address = (String) document.get("address");
+            boolean bool1 = title.contains("ไทย");
+            boolean bool2 = address.contains("ไทย");
+            if (!(bool1 || bool2)) {
+                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_restaurant");
+                log.info("删除一条不符合的数据");
+                continue;
+            }
+
+
+            //保存联系
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_2AZp-JQr _2HBN-k68 rZHcZ9a2\")]/../../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("contact", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            document.put("update_time", LocalDateTime.now());
+            document.put("is_craw", true);
+            mongoTemplate.save(document, "tripadvisor_restaurant");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+
+    public void crawDetailPageTravel() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        log.info("旅游：开始爬取详情页");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_travel");
+        for (Document document : documents) {
+            webDriver.get((String) document.get("url"));
+            Thread.sleep(2000);
+
+            //处理数据
+            //1.判断是否是泰国数据
+            String title = (String) document.get("title");
+            String address = (String) document.get("address");
+            boolean bool1 = title.contains("ไทย");
+            boolean bool2 = address.contains("ไทย");
+            if (!(bool1 || bool2)) {
+                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_travel");
+                log.info("删除一条不符合的数据");
+                continue;
+            }
+
+            //保存联系
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"ui_icon phone _3D9Qcwoe\")]/../div")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("contact", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            document.put("update_time", LocalDateTime.now());
+            document.put("is_craw", true);
+            mongoTemplate.save(document, "tripadvisor_travel");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
 }

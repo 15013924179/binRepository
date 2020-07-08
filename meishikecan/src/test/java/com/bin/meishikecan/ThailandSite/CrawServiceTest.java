@@ -25,6 +25,9 @@ class CrawServiceTest {
     @Autowired
     private TripadvisorCrawsService tripadvisorCrawsService;
 
+    @Autowired
+    private WonderfulpackageCrawService wonderfulpackageCrawService;
+
 
     //https://thai.tourismthailand.org/
     @Test
@@ -83,19 +86,19 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",4,1,"//*[@class=\"sc-10ino0a-13 dKFLtJ\"]");
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",6,30);
     }
 
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage1() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",null,null,"//*[@class=\"sc-10ino0a-13 dKFLtJ\"]");
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",1,71);
     }
 
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage2() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=4","wongnai_travel",null,null,"//*[@class=\"sc-7z7jpy-3 hYHNzB\"]");
+        wongnaiCrawService.crawTravelListPage("https://www.wongnai.com/businesses?domain=4","wongnai_travel",null,null);
     }
 
     //https://th.tripadvisor.com
@@ -104,5 +107,28 @@ class CrawServiceTest {
         tripadvisorCrawsService.crawListPage();
     }
 
+    //https://th.tripadvisor.com
+    @Test
+    void tripadvisorCrawDetailPageHotel() throws Exception{
+        tripadvisorCrawsService.crawDetailPageHotel();
+    }
+
+    //https://th.tripadvisor.com
+    @Test
+    void tripadvisorCrawDetailPageTravel() throws Exception{
+        tripadvisorCrawsService.crawDetailPageTravel();
+    }
+
+    //https://th.tripadvisor.com
+    @Test
+    void tripadvisorCrawDetailPageRestan() throws Exception{
+        tripadvisorCrawsService.crawDetailPageRestan();
+    }
+
+    //https://www.wonderfulpackage.com/product/Thailand/
+    @Test
+    void wonderfulpackageCrawListPage() throws Exception{
+        wonderfulpackageCrawService.crawDetailPage();
+    }
 
 }
