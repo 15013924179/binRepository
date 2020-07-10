@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -157,9 +159,11 @@ public class TrueidCrawService {
         try {
             log.info("开始爬取：" + tableName);
             int index = 1;
+            Pattern pattern = Pattern.compile("[0-9]+");
             for (Document document : list) {
                 webDriver.get((String) document.get("url"));
                 Thread.sleep(2000);
+
                 Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\"style__ContentDetailBox-sc-150i3lj-0 style-sc-150i3lj-1 bietjr\"]")))
                         .map(WebElement::getText)
                         .map(String::trim)
@@ -176,6 +180,42 @@ public class TrueidCrawService {
                         .ifPresent(x -> {
                             document.put("brower", x);
                         });
+
+                //点赞数
+                try {
+                    Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\"headmanage\"]/div[4]/span")))
+                            .map(WebElement::getText)
+                            .map(String::trim)
+                            .filter(x -> !x.isEmpty())
+                            .ifPresent(x -> {
+                                document.put("like", x);
+                            });
+                }catch (Exception e){
+                    document.put("like", 0);
+                }
+
+
+                //评论数
+                try {
+                    webDriver.switchTo().frame(webDriver.findElement(By.xpath("//*[@id=\"__next\"]/main/div[3]/div/div[1]/div/div/div/div/span/iframe")));
+                    Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_50f7\")]")))
+                            .map(WebElement::getText)
+                            .map(x -> {
+                                //正则匹配
+                                Matcher matcher = pattern.matcher(x);
+                                if (matcher.find()) {
+                                    return matcher.group();
+                                }
+                                return "0";
+                            })
+                            .map(String::trim)
+                            .filter(x -> !x.isEmpty())
+                            .ifPresent(x -> {
+                                document.put("comment_number", x);
+                            });
+                } catch (Exception e) {
+                    document.put("comment_number", "0");
+                }
 
                 document.put("update_time", LocalDateTime.now());
                 document.put("is_craw", true);

@@ -119,7 +119,7 @@ public class WongnaiCrawService {
                     ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView();", pageButton);
                     Thread.sleep(2000);
                     actions.moveToElement(pageButton).click().perform();
-                    Thread.sleep(10000);
+                    Thread.sleep(2000);
                 } catch (Exception e) {
                     log.info("已经最后一页了");
                     page = 1;

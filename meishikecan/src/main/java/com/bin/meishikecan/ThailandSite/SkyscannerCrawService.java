@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -27,27 +26,32 @@ public class SkyscannerCrawService {
     private MongoTemplate mongoTemplate;
 
     public void crawListPage() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriver();
+        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
         webDriver.get(url);
         Thread.sleep(30000);
-        List<Document> citys = mongoTemplate.findAll(Document.class, "taiguo_city");
-        //关键字
-        int index = 1;
+        //原来的个数
         int oldElement = 0;
-        //给五次缓存机会
-        int cach = 5;
-        for (Document city : citys) {
-            log.info("开始爬取第" + index + "关键字");
-            WebElement input = webDriver.findElement(By.xpath("//*[@id=\"destination-autosuggest\"]"));
-            input.sendKeys((String) city.get("name"));
-            WebElement button = webDriver.findElement(By.xpath("//*[@class=\"BpkButton_bpk-button__3CLCx BpkButton_bpk-button--large__3nGhA SearchControls_SearchControls__cta__3nH4P\"]"));
-            button.click();
-            Thread.sleep(5000);
+        //缓存机会,防止因为延迟提前退出
+        int cach = 10;
+        log.info("获取输入框");
+        WebElement input = webDriver.findElement(By.xpath("//*[@id=\"destination-autosuggest\"]"));
+        log.info("清空输入框");
+        input.clear();
+        Thread.sleep(2000);
+        log.info("输入输入框");
+        input.sendKeys("ไทย");
+        Thread.sleep(3000);
+        log.info("点击搜索");
+        WebElement button = webDriver.findElement(By.xpath("//*[@class=\"BpkButton_bpk-button__3CLCx BpkButton_bpk-button--large__3nGhA SearchControls_SearchControls__cta__3nH4P\"]"));
+        button.click();
+        Thread.sleep(8000);
 
-            //翻页
-            log.info("开始翻页");
+        //翻页
+        log.info("开始翻页");
 
 
+        //循环搜索
+        for (int i = 0; i < 20; i++) {
             while (true) {
                 try {
                     WebElement next = webDriver.findElement(By.xpath("//*[@class=\"HotelCardsList_HotelCardsList__bottomButton__KIY-v\"]/button[text()=\"ดูเพิ่มเติม\"]"));
@@ -58,12 +62,15 @@ public class SkyscannerCrawService {
 
                 }
                 webDriver.findElement(By.tagName("html")).sendKeys(Keys.END);
-                Thread.sleep(5000);
+                Thread.sleep(3000);
+                webDriver.findElement(By.tagName("html")).sendKeys(Keys.END);
+                Thread.sleep(3000);
                 int newElement = webDriver.findElements(By.xpath("//*[@class=\"CardRowLayout_CardRowLayout__3d3Kh\"]")).size();
                 log.info("列表数量：" + newElement);
                 if (newElement == oldElement) {
                     --cach;
                     if (cach < 0) {
+                        log.info("跳出翻页循环");
                         break;
                     }
                 } else {
@@ -84,7 +91,9 @@ public class SkyscannerCrawService {
                             .map(x -> {
                                 return x.getAttribute("href");
                             })
-                            .map(x -> {return x.split("\\?")[0];})
+                            .map(x -> {
+                                return x.split("\\?")[0];
+                            })
                             .filter(x -> !x.isEmpty())
                             .ifPresent(x -> {
                                 document.put("url", x);
@@ -138,13 +147,25 @@ public class SkyscannerCrawService {
 
                 }
 
+
                 document.put("create_time", LocalDateTime.now());
                 document.put("update_time", LocalDateTime.now());
                 document.put("is_craw", false);
                 mongoTemplate.save(document, "skyscanner_hotel");
             }
 
+            //刷新搜索
+            try {
+                WebElement searchButton = webDriver.findElement(By.xpath("//*[@class=\"BpkButton_bpk-button__3CLCx BpkButton_bpk-button--secondary__Rr80M\"][text()=\"รีเฟรชการค้นหา\"]"));
+                searchButton.click();
+            }catch (Exception e){
+                log.info("找不到刷新按鈕，執行輸入框刷新");
+                button = webDriver.findElement(By.xpath("//*[@class=\"BpkButton_bpk-button__3CLCx BpkButton_bpk-button--large__3nGhA SearchControls_SearchControls__cta__3nH4P\"]"));
+                button.click();
+            }
+            Thread.sleep(20000);
         }
+
     }
 
 }

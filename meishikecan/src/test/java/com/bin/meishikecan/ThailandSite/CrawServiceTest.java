@@ -28,6 +28,18 @@ class CrawServiceTest {
     @Autowired
     private WonderfulpackageCrawService wonderfulpackageCrawService;
 
+    @Autowired
+    private SanookCrawService sanookCrawService;
+
+    @Autowired
+    private KapookCrawService kapookCrawService;
+
+    @Autowired
+    PaiduaykanCrawService paiduaykanCrawService;
+
+    @Autowired
+    SkyscannerCrawService skyscannerCrawService;
+
 
     //https://thai.tourismthailand.org/
     @Test
@@ -86,7 +98,7 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",6,30);
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",51,19);
     }
 
     //https://www.wongnai.com/
@@ -130,5 +142,91 @@ class CrawServiceTest {
     void wonderfulpackageCrawListPage() throws Exception{
         wonderfulpackageCrawService.crawDetailPage();
     }
+
+    //https://www.sanook.com/travel/thailand/
+    @Test
+    void sanookCrawListPageTravel() throws Exception{
+        sanookCrawService.reptileListPage("https://www.sanook.com/travel/thailand/","sanook_travel");
+    }
+
+    //https://www.sanook.com/travel/restaurant/
+    @Test
+    void sanookCrawListPageRestaurant() throws Exception{
+        sanookCrawService.reptileListPage("https://www.sanook.com/travel/restaurant/","sanook_restaurant");
+    }
+
+    //https://www.sanook.com/travel/hotel/
+    @Test
+    void sanookCrawListPageHotel() throws Exception{
+        sanookCrawService.reptileListPage("https://www.sanook.com/travel/hotel/","sanook_hotel");
+    }
+
+    //https://www.sanook.com/travel/thailand/
+    @Test
+    void sanookCrawDetailPageTravel() throws Exception{
+        sanookCrawService.reptileDetailPage("sanook_travel");
+    }
+
+    //https://www.sanook.com/travel/restaurant/
+    @Test
+    void sanookCrawDetailPageRestaurant() throws Exception{
+        sanookCrawService.reptileDetailPage("sanook_restaurant");
+    }
+
+    //https://www.sanook.com/travel/hotel/
+    @Test
+    void sanookCrawDetailPageHotel() throws Exception{
+        sanookCrawService.reptileDetailPage("sanook_hotel");
+    }
+
+    //https://travel.kapook.com/thai.html
+    @Test
+    void kapookCrawListPageTravel() throws Exception{
+        kapookCrawService.reptileListPage("https://travel.kapook.com/thai.html","kapook_travel");
+    }
+
+    //https://travel.kapook.com/restaurant.html
+    @Test
+    void kapookCrawListPageRestaurant() throws Exception{
+        kapookCrawService.reptileListPage("https://travel.kapook.com/restaurant.html","kapook_restaurant");
+    }
+
+    //https://travel.kapook.com/hotel.html
+    @Test
+    void kapookCrawListPageHotel() throws Exception{
+        kapookCrawService.reptileListPage("https://travel.kapook.com/hotel.html","kapook_hotel");
+    }
+
+    //https://travel.kapook.com/hotel.html
+    @Test
+    void kapookCrawDetailPageHotel() throws Exception{
+        kapookCrawService.reptileDetailPage("kapook_hotel");
+    }
+
+    //https://travel.kapook.com/thai.html
+    @Test
+    void kapookCrawDetailPageTravel() throws Exception{
+        kapookCrawService.reptileDetailPage("kapook_travel");
+    }
+
+    //https://travel.kapook.com/restaurant.html
+    @Test
+    void kapookCrawDetailPageRestaurant() throws Exception{
+        kapookCrawService.reptileDetailPage("kapook_restaurant");
+    }
+
+    //https://www.paiduaykan.com
+    @Test
+    void paiduaykanCrawListPage() throws Exception{
+        paiduaykanCrawService.crawDetailPage();
+    }
+
+    //https://www.skyscanner.co.th
+    @Test
+    void skyscannerCrawListPage() throws Exception{
+        skyscannerCrawService.crawListPage();
+    }
+
+
 
 }

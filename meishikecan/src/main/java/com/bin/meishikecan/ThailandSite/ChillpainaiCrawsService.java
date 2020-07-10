@@ -120,6 +120,46 @@ public class ChillpainaiCrawsService {
 
             }
 
+            //浏览量
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"view\")]/em")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("brower_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("brower_number", "0");
+            }
+
+            //转推量
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@id,\"tw-count\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("retweet_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("retweet_number", "0");
+            }
+
+            //分享量
+            try {
+                webDriver.switchTo().frame(webDriver.findElement(By.xpath("//*[@id=\"share-btn\"]/div[2]/iframe")));
+                Optional.ofNullable(webDriver.findElement(By.xpath("//span[contains(@id,\"u_0_0\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("share_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("share_number", "0");
+            }
+
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);
             mongoTemplate.save(document, "chillpainai_travel");

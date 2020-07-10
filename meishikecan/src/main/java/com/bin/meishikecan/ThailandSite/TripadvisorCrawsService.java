@@ -144,24 +144,24 @@ public class TripadvisorCrawsService {
     }
 
     public void crawDetailPageHotel() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        WebDriver webDriver = MySeleniumUtils.getWebDriver();
         log.info("旅店开始爬取详情页");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_hotel");
         for (Document document : documents) {
             webDriver.get((String) document.get("url"));
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             //处理数据
             //1.判断是否是泰国数据
-            String title = (String) document.get("title");
-            String address = (String) document.get("address");
-            boolean bool1 = title.contains("ไทย");
-            boolean bool2 = address.contains("ไทย");
-            if (!(bool1 || bool2)) {
-                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_hotel");
-                log.info("删除一条不符合的数据");
-                continue;
-            }
+//            String title = (String) document.get("title");
+//            String address = (String) document.get("address");
+//            boolean bool1 = title.contains("ไทย");
+//            boolean bool2 = address.contains("ไทย");
+//            if (!(bool1 || bool2)) {
+//                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_hotel");
+//                log.info("删除一条不符合的数据");
+//                continue;
+//            }
 
 
             //保存联系
@@ -177,6 +177,71 @@ public class TripadvisorCrawsService {
 
             }
 
+            //评分
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_3cjYfwwQ\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("score", x);
+                        });
+            } catch (Exception e) {
+                document.put("score", "0");
+            }
+
+            //评论数
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_2GIfqQkr PsUadXSP test-target-tab-Reviews sLZhlLAo Ls68q8e7\")]/span[2]/span/span[1]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("comment_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("comment_number", "0");
+            }
+
+            //排名
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_28eYYeHH\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("rank", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+
+            //最低价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"CEf5oHnZ\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("lower_price", x);
+                        });
+            } catch (Exception e) {
+                try {
+                    Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@id,\"taplc_resp_hr_atf_meta_component_0\")]/div/div/div[1]/div[1]/div/div[2]")))
+                            .map(WebElement::getText)
+                            .map(String::trim)
+                            .filter(x -> !x.isEmpty())
+                            .ifPresent(x -> {
+                                document.put("lower_price", x);
+                            });
+                } catch (Exception E) {
+
+                }
+
+            }
+
+
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);
             mongoTemplate.save(document, "tripadvisor_hotel");
@@ -186,7 +251,7 @@ public class TripadvisorCrawsService {
     }
 
     public void crawDetailPageRestan() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        WebDriver webDriver = MySeleniumUtils.getWebDriver();
         log.info("餐厅：开始爬取详情页");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_restaurant");
         for (Document document : documents) {
@@ -195,15 +260,15 @@ public class TripadvisorCrawsService {
 
             //处理数据
             //1.判断是否是泰国数据
-            String title = (String) document.get("title");
-            String address = (String) document.get("address");
-            boolean bool1 = title.contains("ไทย");
-            boolean bool2 = address.contains("ไทย");
-            if (!(bool1 || bool2)) {
-                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_restaurant");
-                log.info("删除一条不符合的数据");
-                continue;
-            }
+//            String title = (String) document.get("title");
+//            String address = (String) document.get("address");
+//            boolean bool1 = title.contains("ไทย");
+//            boolean bool2 = address.contains("ไทย");
+//            if (!(bool1 || bool2)) {
+//                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_restaurant");
+//                log.info("删除一条不符合的数据");
+//                continue;
+//            }
 
 
             //保存联系
@@ -219,6 +284,45 @@ public class TripadvisorCrawsService {
 
             }
 
+            //评分
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"r2Cf69qf\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("score", x);
+                        });
+            } catch (Exception e) {
+                document.put("score", "0");
+            }
+
+            //评论数
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"reviews_header_count\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("comment_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("comment_number", "0");
+            }
+
+            //排名
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_3-W4EexF\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("rank", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);
             mongoTemplate.save(document, "tripadvisor_restaurant");
@@ -229,7 +333,8 @@ public class TripadvisorCrawsService {
 
 
     public void crawDetailPageTravel() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        WebDriver webDriver = MySeleniumUtils.getWebDriver();
+        Pattern pattern = Pattern.compile("[0-9]+");
         log.info("旅游：开始爬取详情页");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tripadvisor_travel");
         for (Document document : documents) {
@@ -238,15 +343,15 @@ public class TripadvisorCrawsService {
 
             //处理数据
             //1.判断是否是泰国数据
-            String title = (String) document.get("title");
-            String address = (String) document.get("address");
-            boolean bool1 = title.contains("ไทย");
-            boolean bool2 = address.contains("ไทย");
-            if (!(bool1 || bool2)) {
-                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_travel");
-                log.info("删除一条不符合的数据");
-                continue;
-            }
+//            String title = (String) document.get("title");
+//            String address = (String) document.get("address");
+//            boolean bool1 = title.contains("ไทย");
+//            boolean bool2 = address.contains("ไทย");
+//            if (!(bool1 || bool2)) {
+//                mongoTemplate.remove(new Query(Criteria.where("_id").is(document.get("_id"))),"tripadvisor_travel");
+//                log.info("删除一条不符合的数据");
+//                continue;
+//            }
 
             //保存联系
             try {
@@ -260,6 +365,54 @@ public class TripadvisorCrawsService {
             } catch (Exception e) {
 
             }
+
+            //评分
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_1NKYRldB\")]/span[1]")))
+                        .map(x -> {
+                            String a=x.getAttribute("class");
+                            //正则匹配
+                            Matcher matcher = pattern.matcher(a);
+                            if (matcher.find()) {
+                                return (Double.parseDouble(matcher.group())/10)+"";
+                            }
+                            return "0";
+                        })
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("score", x);
+                        });
+            } catch (Exception e) {
+                document.put("score", "0");
+            }
+
+            //评论数
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_2GIfqQkr _2-zZAhSq sLZhlLAo Ls68q8e7\")]/span[2]/span[1]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("comment_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("comment_number", "0");
+            }
+
+            //排名
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"eQSJNhO6\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("rank", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
 
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);
