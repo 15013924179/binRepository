@@ -29,6 +29,9 @@ class CrawServiceTest {
     private WonderfulpackageCrawService wonderfulpackageCrawService;
 
     @Autowired
+    private SkyscannerCrawService skyscannerCrawService;
+
+    @Autowired
     private SanookCrawService sanookCrawService;
 
     @Autowired
@@ -36,9 +39,6 @@ class CrawServiceTest {
 
     @Autowired
     PaiduaykanCrawService paiduaykanCrawService;
-
-    @Autowired
-    SkyscannerCrawService skyscannerCrawService;
 
 
     //https://thai.tourismthailand.org/
@@ -113,6 +113,12 @@ class CrawServiceTest {
         wongnaiCrawService.crawTravelListPage("https://www.wongnai.com/businesses?domain=4","wongnai_travel",null,null);
     }
 
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPage1() throws Exception{
+        wongnaiCrawService.crawDetailPage("wongnai_travel");
+    }
+
     //https://th.tripadvisor.com
     @Test
     void tripadvisorCrawListPage() throws Exception{
@@ -141,6 +147,11 @@ class CrawServiceTest {
     @Test
     void wonderfulpackageCrawListPage() throws Exception{
         wonderfulpackageCrawService.crawDetailPage();
+    }
+
+    @Test
+    void skyscannerCrawServiceCrawListPage() throws Exception{
+        skyscannerCrawService.crawListPage();
     }
 
     //https://www.sanook.com/travel/thailand/
