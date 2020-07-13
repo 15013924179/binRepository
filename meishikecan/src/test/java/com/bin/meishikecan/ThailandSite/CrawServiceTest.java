@@ -98,7 +98,7 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",68,1);
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",83,51);
     }
 
     //https://www.wongnai.com/
@@ -116,7 +116,7 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawDetailPage1() throws Exception{
-        wongnaiCrawService.crawDetailPage("wongnai_travel");
+        wongnaiCrawService.crawDetailPageTravel();
     }
 
     //https://th.tripadvisor.com
@@ -235,7 +235,7 @@ class CrawServiceTest {
     //https://www.skyscanner.co.th
     @Test
     void skyscannerCrawListPage() throws Exception{
-        skyscannerCrawService.crawListPage();
+        skyscannerCrawService.crawDetailPage();
     }
 
 

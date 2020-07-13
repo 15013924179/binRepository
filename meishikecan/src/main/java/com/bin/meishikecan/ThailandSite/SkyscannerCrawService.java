@@ -13,9 +13,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -166,6 +169,59 @@ public class SkyscannerCrawService {
             Thread.sleep(20000);
         }
 
+    }
+
+    public void crawDetailPage() throws Exception{
+        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "skyscanner_hotel");
+        for (Document document : documents) {
+            webDriver.get((String) document.get("url"));
+            Thread.sleep(2000);
+
+
+            //保存地址
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\"Location_Location__address__340cs\"]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("address", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            //评分数
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\"BpkText_bpk-text__nraB1 BpkText_bpk-text--base__2vSPQ ScoreAndSummary_ScoreAndSummary__basedOn__3OXIZ\"]")))
+                        .map(WebElement::getText)
+                        .map(x -> {
+                            //正则匹配
+                            Matcher matcher = pattern.matcher(x);
+                            if (matcher.find()) {
+                                return matcher.group();
+                            }
+                            return "0";
+                        })
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("score_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("score_number", "0");
+            }
+
+
+            document.put("update_time", LocalDateTime.now());
+            document.put("is_craw", true);
+            mongoTemplate.save(document, "skyscanner_hotel");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
     }
 
 }

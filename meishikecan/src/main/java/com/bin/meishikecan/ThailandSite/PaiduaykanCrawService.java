@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -82,6 +83,7 @@ public class PaiduaykanCrawService {
     public void crawDetailPage() throws Exception {
         WebDriver webDriver = MySeleniumUtils.getWebDriver();
         log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "paiduaykan_travel");
         for (Document document : documents) {
             webDriver.get((String) document.get("url"));
@@ -99,6 +101,32 @@ public class PaiduaykanCrawService {
             } catch (Exception e) {
 
             }
+
+
+            //保存浏览量
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"article-info pull-right\")]")))
+                        .map(WebElement::getText)
+                        .map(x -> {
+                            return x.split("\\|")[1];
+                        })
+                        .map(x -> {
+                            //正则匹配
+                            Matcher matcher = pattern.matcher(x);
+                            if (matcher.find()) {
+                                return matcher.group();
+                            }
+                            return "0";
+                        })
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("brower_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("brower_number", "0");
+            }
+
 
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @Slf4j
@@ -81,6 +83,7 @@ public class RyoiireviewCrawService {
     public void crawDetailPage() throws Exception {
         WebDriver webDriver = MySeleniumUtils.getWebDriver();
         log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9 |,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "ryoiireview_restaurant");
         for (Document document : documents) {
             webDriver.get((String) document.get("url"));
@@ -97,6 +100,50 @@ public class RyoiireviewCrawService {
                         });
             } catch (Exception e) {
 
+            }
+
+            //like
+            try {
+                webDriver.switchTo().frame(webDriver.findElement(By.xpath("//*[@id=\"col-cen\"]/div/div[3]/div[2]/div[1]/span/iframe")));
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[@id=\"u_0_4\"]")))
+                        .map(WebElement::getText)
+                        .map(x -> {
+                            //正则匹配
+                            Matcher matcher = pattern.matcher(x);
+                            if (matcher.find()) {
+                                return matcher.group();
+                            }
+                            return "0";
+                        })
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("like", x);
+                        });
+            } catch (Exception e) {
+                document.put("like", "0");
+            }
+
+            //评论数
+            try {
+                webDriver.switchTo().frame(webDriver.findElement(By.xpath("//*[@id=\"col-cen\"]/div/div[3]/div[2]/div[2]/span/iframe")));
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\" _50f7\"]")))
+                        .map(WebElement::getText)
+                        .map(x -> {
+                            //正则匹配
+                            Matcher matcher = pattern.matcher(x);
+                            if (matcher.find()) {
+                                return matcher.group();
+                            }
+                            return "0";
+                        })
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("comment_number", x);
+                        });
+            } catch (Exception e) {
+                document.put("comment_number", "0");
             }
 
             document.put("update_time", LocalDateTime.now());
