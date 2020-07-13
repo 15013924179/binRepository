@@ -191,7 +191,7 @@ public class TrueidCrawService {
                                 document.put("like", x);
                             });
                 }catch (Exception e){
-                    document.put("like", 0);
+                    document.put("like", "0");
                 }
 
 

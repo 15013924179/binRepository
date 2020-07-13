@@ -125,6 +125,17 @@ public class WongnaiCrawService {
                     actions.moveToElement(pageButton).click().perform();
                     Thread.sleep(2000);
                 } catch (Exception e) {
+                    //是否出现反爬虫
+                    while (true){
+                        try{
+                            WebElement element = webDriver.findElement(By.xpath("//*[text()=\"Please complete this captcha to continue\"]"));
+                            log.info("出现反爬虫验证");
+                            Thread.sleep(60000);
+                        }catch (Exception e1){
+                            log.info("未出现反爬虫验证");
+                            break;
+                        }
+                    }
                     log.info("已经最后一页了");
                     page = 1;
                     break;
