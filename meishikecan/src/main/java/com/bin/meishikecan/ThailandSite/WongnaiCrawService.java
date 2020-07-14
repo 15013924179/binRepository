@@ -53,7 +53,7 @@ public class WongnaiCrawService {
         //获取所有地区按钮
         WebElement button = webDriver.findElement(By.xpath("//*[@class=\"sc-1woz07j-0 hvuhEN\"]"));
         button.click();
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         //所有地区
         List<WebElement> places = webDriver.findElements(By.xpath("//*[@class=\"sc-996lfo-3 hcLdCv\"]/div/div"));
         log.info("初始化完毕，开始爬取列表页");
@@ -254,7 +254,7 @@ public class WongnaiCrawService {
     public void crawDetailPageTravel() throws Exception {
         WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
         log.info("开始爬取详情页");
-        Pattern pattern = Pattern.compile("[0-9 |,]+");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_travel");
         boolean bool= true;
         for (Document document : documents) {
@@ -435,7 +435,7 @@ public class WongnaiCrawService {
     public void crawDetailPageRes() throws Exception {
         WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
         log.info("开始爬取详情页");
-        Pattern pattern = Pattern.compile("[0-9 |,]+");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
         boolean bool= true;
         for (Document document : documents) {
@@ -468,7 +468,7 @@ public class WongnaiCrawService {
 
             //保存地址
             try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1xjzh3o-11 cCkZvK\")]")))
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1xjzh3o-15 ptCXO\")]/div[1]")))
                         .map(WebElement::getText)
                         .map(String::trim)
                         .filter(x -> !x.isEmpty())
@@ -493,9 +493,9 @@ public class WongnaiCrawService {
             }
 
 
-            //保存价格 旅游
+            //保存价格
             try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-159e0rz-0 gQDMID\")]")))
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[text()=\"ช่วงราคา\"]/../span[2]")))
                         .map(WebElement::getText)
                         .map(String::trim)
                         .filter(x -> !x.isEmpty())
@@ -561,19 +561,6 @@ public class WongnaiCrawService {
 
             }
 
-            //介绍
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"x1fflo-1 gzYlCt\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("suggest", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
             //计算评分
             try{
                 //五个等级的评分
@@ -591,6 +578,20 @@ public class WongnaiCrawService {
             }catch (Exception e){
                 document.put("score","0");
             }
+
+            //收藏数
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1gpyp8m-2 lnmdJX _26UtflxZMiadvPqteHFaks\")]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("record_number", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
 
             document.put("update_time", LocalDateTime.now());
             document.put("is_craw", true);

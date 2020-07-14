@@ -100,7 +100,7 @@ public class ThailandNationalTourismCrawService {
     public void crawDetailPage() throws Exception {
         WebDriver webDriver = MySeleniumUtils.getWebDriver();
         log.info("开始爬取详情页");
-        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "thailand_national_tourism");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "tourismthailand_travel");
         for (Document document : documents) {
             webDriver.get((String) document.get("url"));
             Thread.sleep(2000);

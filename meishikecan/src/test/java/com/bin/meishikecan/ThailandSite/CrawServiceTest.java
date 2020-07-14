@@ -98,13 +98,13 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",83,51);
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=1","wongnai_restaurant",null,null);
     }
 
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage1() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",1,71);
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",81,8);
     }
 
     //https://www.wongnai.com/
@@ -117,6 +117,12 @@ class CrawServiceTest {
     @Test
     void wongnaiCrawDetailPage1() throws Exception{
         wongnaiCrawService.crawDetailPageTravel();
+    }
+
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPage2() throws Exception{
+        wongnaiCrawService.crawDetailPageRes();
     }
 
     //https://th.tripadvisor.com
