@@ -104,7 +104,7 @@ class CrawServiceTest {
     //https://www.wongnai.com/
     @Test
     void wongnaiCrawListPage1() throws Exception{
-        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",81,8);
+        wongnaiCrawService.crawListPage("https://www.wongnai.com/businesses?domain=3","wongnai_hotel",null,null);
     }
 
     //https://www.wongnai.com/
@@ -123,6 +123,12 @@ class CrawServiceTest {
     @Test
     void wongnaiCrawDetailPage2() throws Exception{
         wongnaiCrawService.crawDetailPageRes();
+    }
+
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPage3() throws Exception{
+        wongnaiCrawService.crawDetailPageHotel();
     }
 
     //https://th.tripadvisor.com

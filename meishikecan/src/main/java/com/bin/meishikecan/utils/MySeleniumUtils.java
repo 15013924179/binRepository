@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,6 +24,8 @@ public class MySeleniumUtils {
     private MySeleniumUtils() {
         throw new IllegalStateException("Utility class");
     }
+
+    private static RestTemplate restTemplate = new RestTemplate();
 
     /**
      * 让webDriver 转换为 HtmlPage 对象
@@ -85,5 +88,21 @@ public class MySeleniumUtils {
         chromeOptions.addArguments("--start-maximized");
         return new ChromeDriver(chromeOptions);
     }
+
+    /**
+     *
+     * 获取代理ip的Driver
+     */
+    public static WebDriver getProxyIpDriver(){
+        System.setProperty("webdriver.chrome.driver", "D:\\chromedriver.exe");
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--start-maximized");
+        chromeOptions.addArguments("blink-settings=imagesEnabled=false");
+        String ip = restTemplate.getForObject("http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=11&pack=109452&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=2&regions=&gm=4", String.class);
+        chromeOptions.addArguments("--proxy-server=http://" + ip);
+        log.info("代理ip："+ip);
+        return new ChromeDriver(chromeOptions);
+    }
+
 
 }

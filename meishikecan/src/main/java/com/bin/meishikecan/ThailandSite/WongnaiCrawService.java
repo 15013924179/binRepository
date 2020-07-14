@@ -7,12 +7,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +30,8 @@ public class WongnaiCrawService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     /**
      * @param url   站点
@@ -252,67 +257,16 @@ public class WongnaiCrawService {
     }
 
     public void crawDetailPageTravel() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
         log.info("开始爬取详情页");
         Pattern pattern = Pattern.compile("[0-9|,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_travel");
-        boolean bool= true;
+        boolean bool = true;
         for (Document document : documents) {
-            webDriver.get((String) document.get("url"));
-            Thread.sleep(2000);
 
-            while (true){
-                try{
-                    WebElement element = webDriver.findElement(By.xpath("//*[text()=\"Please complete this captcha to continue\"]"));
-                    log.info("出现反爬虫验证");
-                    Thread.sleep(60000);
-                }catch (Exception e){
-                    log.info("未出现反爬虫验证");
-                    break;
-                }
-            }
+            commonCraw(webDriver, document, pattern, bool);
 
-            if (bool) {
-                //防止弹窗
-                try {
-                    WebElement btn = webDriver.findElement(By.xpath("//*[@class=\"sc-fznxsB gIIAsV\"]"));
-                    btn.click();
-                    Thread.sleep(1000);
-                    bool = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            //保存地址
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1xjzh3o-11 cCkZvK\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("address", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-            //保存联系
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"hfew2f-1 jukOhp\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("contact", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-
-            //保存价格 旅游
+            //保存价格
             try {
                 Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-159e0rz-0 gQDMID\")]")))
                         .map(WebElement::getText)
@@ -320,61 +274,6 @@ public class WongnaiCrawService {
                         .filter(x -> !x.isEmpty())
                         .ifPresent(x -> {
                             document.put("total", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-            //评论数
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/h2")))
-                        .map(WebElement::getText)
-                        .map(x -> {
-                            //正则匹配
-                            Matcher matcher = pattern.matcher(x);
-                            if (matcher.find()) {
-                                return matcher.group();
-                            }
-                            return "0";
-                        })
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("comment_number", x);
-                        });
-            } catch (Exception e) {
-                document.put("comment_number", "0");
-            }
-
-            //评分数
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/div")))
-                        .map(WebElement::getText)
-                        .map(x -> {
-                            //正则匹配
-                            Matcher matcher = pattern.matcher(x);
-                            if (matcher.find()) {
-                                return matcher.group();
-                            }
-                            return "0";
-                        })
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("score_number", x);
-                        });
-            } catch (Exception e) {
-                document.put("score_number", "0");
-            }
-
-            //排行
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1afxgci-4 bvEbJw\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("rank", x);
                         });
             } catch (Exception e) {
 
@@ -393,39 +292,7 @@ public class WongnaiCrawService {
 
             }
 
-            //计算评分
-            try{
-                //五个等级的评分
-                List<WebElement> scores = webDriver.findElements(By.xpath("//*[contains(@class,\"sc-1nastw3-0 bdlWei\")]/div/div[3]"));
-                Integer score =0;
-                for (int i=0 ;i<scores.size();i++){
-                    String s =scores.get(i).getText();
-                    score = score + (Integer.parseInt(s) * (5-i));
-                    document.put("score_grade_"+(5-i),s);
-                }
-                String sn = (String) document.get("score_number");
-                Integer score_number = Integer.parseInt(sn);
-                BigDecimal divide = new BigDecimal(score).divide(new BigDecimal(score_number), 2, BigDecimal.ROUND_HALF_UP);
-                document.put("score",divide+"");
-            }catch (Exception e){
-                document.put("score","0");
-            }
 
-
-//            try {
-//                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"_2qDKIyMmA-jMRyfxACZWt6\")]/../span[2]")))
-//                        .map(WebElement::getText)
-//                        .map(String::trim)
-//                        .filter(x -> !x.isEmpty())
-//                        .ifPresent(x -> {
-//                            document.put("total", x);
-//                        });
-//            } catch (Exception e) {
-//
-//            }
-
-            document.put("update_time", LocalDateTime.now());
-            document.put("is_craw", true);
             mongoTemplate.save(document, "wongnai_travel");
             log.info("当前详情页数据保存完毕");
         }
@@ -433,65 +300,14 @@ public class WongnaiCrawService {
     }
 
     public void crawDetailPageRes() throws Exception {
-        WebDriver webDriver = MySeleniumUtils.getWebDriverHavingImg();
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
         log.info("开始爬取详情页");
         Pattern pattern = Pattern.compile("[0-9|,]+");
         List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
-        boolean bool= true;
+        boolean bool = true;
         for (Document document : documents) {
-            webDriver.get((String) document.get("url"));
-            Thread.sleep(2000);
 
-            while (true){
-                try{
-                    WebElement element = webDriver.findElement(By.xpath("//*[text()=\"Please complete this captcha to continue\"]"));
-                    log.info("出现反爬虫验证");
-                    Thread.sleep(60000);
-                }catch (Exception e){
-                    log.info("未出现反爬虫验证");
-                    break;
-                }
-            }
-
-            if (bool) {
-                //防止弹窗
-                try {
-                    WebElement btn = webDriver.findElement(By.xpath("//*[@class=\"sc-fznxsB gIIAsV\"]"));
-                    btn.click();
-                    Thread.sleep(1000);
-                    bool = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            //保存地址
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1xjzh3o-15 ptCXO\")]/div[1]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("address", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-            //保存联系
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"hfew2f-1 jukOhp\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("contact", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
+            commonCraw(webDriver,document,pattern,bool);
 
             //保存价格
             try {
@@ -506,99 +322,204 @@ public class WongnaiCrawService {
 
             }
 
-            //评论数
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/h2")))
-                        .map(WebElement::getText)
-                        .map(x -> {
-                            //正则匹配
-                            Matcher matcher = pattern.matcher(x);
-                            if (matcher.find()) {
-                                return matcher.group();
-                            }
-                            return "0";
-                        })
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("comment_number", x);
-                        });
-            } catch (Exception e) {
-                document.put("comment_number", "0");
-            }
-
-            //评分数
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/div")))
-                        .map(WebElement::getText)
-                        .map(x -> {
-                            //正则匹配
-                            Matcher matcher = pattern.matcher(x);
-                            if (matcher.find()) {
-                                return matcher.group();
-                            }
-                            return "0";
-                        })
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("score_number", x);
-                        });
-            } catch (Exception e) {
-                document.put("score_number", "0");
-            }
-
-            //排行
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1afxgci-4 bvEbJw\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("rank", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-            //计算评分
-            try{
-                //五个等级的评分
-                List<WebElement> scores = webDriver.findElements(By.xpath("//*[contains(@class,\"sc-1nastw3-0 bdlWei\")]/div/div[3]"));
-                Integer score =0;
-                for (int i=0 ;i<scores.size();i++){
-                    String s =scores.get(i).getText();
-                    score = score + (Integer.parseInt(s) * (5-i));
-                    document.put("score_grade_"+(5-i),s);
-                }
-                String sn = (String) document.get("score_number");
-                Integer score_number = Integer.parseInt(sn);
-                BigDecimal divide = new BigDecimal(score).divide(new BigDecimal(score_number), 2, BigDecimal.ROUND_HALF_UP);
-                document.put("score",divide+"");
-            }catch (Exception e){
-                document.put("score","0");
-            }
-
-            //收藏数
-            try {
-                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1gpyp8m-2 lnmdJX _26UtflxZMiadvPqteHFaks\")]")))
-                        .map(WebElement::getText)
-                        .map(String::trim)
-                        .filter(x -> !x.isEmpty())
-                        .ifPresent(x -> {
-                            document.put("record_number", x);
-                        });
-            } catch (Exception e) {
-
-            }
-
-
-            document.put("update_time", LocalDateTime.now());
-            document.put("is_craw", true);
             mongoTemplate.save(document, "wongnai_restaurant");
             log.info("当前详情页数据保存完毕");
         }
         log.info("详情页数据抓取完毕");
+    }
+
+    public void crawDetailPageHotel() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_hotel");
+        boolean bool = true;
+        for (Document document : documents) {
+
+            commonCraw(webDriver, document, pattern, bool);
+
+            //保存价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1dfb3cw-1 iVcGNg\")]/div[1]/div[1]/div[2]/div/div[2]/div/div[1]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("total", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            mongoTemplate.save(document, "wongnai_hotel");
+            log.info("当前详情页数据保存完毕");
+
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+    /**
+     * 通用代码块
+     *
+     * @param webDriver
+     * @param document
+     * @param pattern
+     */
+    public void commonCraw(WebDriver webDriver, Document document, Pattern pattern, Boolean bool) throws Exception {
+
+        webDriver.get((String) document.get("url"));
+        Thread.sleep(2000);
+
+        while (true) {
+            try {
+                WebElement element = webDriver.findElement(By.xpath("//*[text()=\"Please complete this captcha to continue\"]"));
+                log.info("出现反爬虫验证");
+//                webDriver.quit();
+                webDriver = MySeleniumUtils.getProxyIpDriver();
+                webDriver.get((String) document.get("url"));
+                Thread.sleep(2000);
+            } catch (Exception e) {
+                log.info("未出现反爬虫验证");
+                break;
+            }
+        }
+
+        if (bool) {
+            //防止弹窗
+            try {
+                WebElement btn = webDriver.findElement(By.xpath("//*[@class=\"sc-fznxsB gIIAsV\"]"));
+                btn.click();
+                Thread.sleep(1000);
+                bool = false;
+            } catch (Exception e) {
+
+            }
+        }
+
+        //保存地址
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1xjzh3o-15 ptCXO\")]/div[1]")))
+                    .map(WebElement::getText)
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("address", x);
+                    });
+        } catch (Exception e) {
+
+        }
+
+        //保存联系
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"hfew2f-1 jukOhp\")]")))
+                    .map(WebElement::getText)
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("contact", x);
+                    });
+        } catch (Exception e) {
+
+        }
+
+        //评论数
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/h2")))
+                    .map(WebElement::getText)
+                    .map(x -> {
+                        //正则匹配
+                        Matcher matcher = pattern.matcher(x);
+                        if (matcher.find()) {
+                            return matcher.group();
+                        }
+                        return "0";
+                    })
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("comment_number", x);
+                    });
+        } catch (Exception e) {
+            document.put("comment_number", "0");
+        }
+
+        //评分数
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"do39q0-0 fxQZvy sc-1afxgci-2 fkyxau\")]/a/div/div/div")))
+                    .map(WebElement::getText)
+                    .map(x -> {
+                        //正则匹配
+                        Matcher matcher = pattern.matcher(x);
+                        if (matcher.find()) {
+                            return matcher.group();
+                        }
+                        return "0";
+                    })
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("score_number", x);
+                    });
+        } catch (Exception e) {
+            document.put("score_number", "0");
+        }
+
+        //排行
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1afxgci-4 bvEbJw\")]")))
+                    .map(WebElement::getText)
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("rank", x);
+                    });
+        } catch (Exception e) {
+
+        }
+
+        //五个等级的评分
+        try {
+            List<WebElement> scores = webDriver.findElements(By.xpath("//*[contains(@class,\"sc-1nastw3-0 bdlWei\")]/div/div[3]"));
+            Integer score = 0;
+            for (int i = 0; i < scores.size(); i++) {
+                String s = scores.get(i).getText();
+                score = score + (Integer.parseInt(s) * (5 - i));
+                document.put("score_grade_" + (5 - i), s);
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 5; i++) {
+                document.put("score_grade_" + (5 - i), "0");
+            }
+        }
+
+        //评分
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[@class=\"sc-1yf4h4e-0 dkxJos\"]//abbr")))
+                    .map(WebElement::getText)
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("score", x);
+                    });
+        } catch (Exception e) {
+            document.put("score", "0");
+        }
+
+        //收藏数
+        try {
+            Optional.ofNullable(webDriver.findElement(By.xpath("//*[contains(@class,\"sc-1gpyp8m-2 lnmdJX _26UtflxZMiadvPqteHFaks\")]")))
+                    .map(WebElement::getText)
+                    .map(String::trim)
+                    .filter(x -> !x.isEmpty())
+                    .ifPresent(x -> {
+                        document.put("record_number", x);
+                    });
+        } catch (Exception e) {
+
+        }
+
+        document.put("update_time", LocalDateTime.now());
+        document.put("is_craw", true);
     }
 
 
