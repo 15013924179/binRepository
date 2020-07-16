@@ -4,10 +4,19 @@ import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -26,6 +35,13 @@ public class MySeleniumUtils {
     }
 
     private static RestTemplate restTemplate = new RestTemplate();
+
+    private static MongoTemplate mongoTemplate;
+
+    static {
+        MongoClient mongoClient = new MongoClient("192.168.124.107", 27017);
+        mongoTemplate = new MongoTemplate(mongoClient, "dongmeng");
+    }
 
     /**
      * 让webDriver 转换为 HtmlPage 对象
@@ -90,17 +106,16 @@ public class MySeleniumUtils {
     }
 
     /**
-     *
      * 获取代理ip的Driver
      */
-    public static WebDriver getProxyIpDriver(){
+    public static WebDriver getProxyIpDriver() {
         System.setProperty("webdriver.chrome.driver", "D:\\chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--start-maximized");
         chromeOptions.addArguments("blink-settings=imagesEnabled=false");
-        String ip = restTemplate.getForObject("http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=11&pack=109452&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=2&regions=&gm=4", String.class);
+        String ip = restTemplate.getForObject("http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=2&regions=&gm=4", String.class);
         chromeOptions.addArguments("--proxy-server=http://" + ip);
-        log.info("代理ip："+ip);
+        log.info("代理ip：" + ip);
         return new ChromeDriver(chromeOptions);
     }
 

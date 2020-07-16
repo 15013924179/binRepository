@@ -264,7 +264,7 @@ public class WongnaiCrawService {
         boolean bool = true;
         for (Document document : documents) {
 
-            commonCraw(webDriver, document, pattern, bool);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
 
             //保存价格
             try {
@@ -307,7 +307,7 @@ public class WongnaiCrawService {
         boolean bool = true;
         for (Document document : documents) {
 
-            commonCraw(webDriver,document,pattern,bool);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
 
             //保存价格
             try {
@@ -336,7 +336,7 @@ public class WongnaiCrawService {
         boolean bool = true;
         for (Document document : documents) {
 
-            commonCraw(webDriver, document, pattern, bool);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
 
             //保存价格
             try {
@@ -365,21 +365,28 @@ public class WongnaiCrawService {
      * @param document
      * @param pattern
      */
-    public void commonCraw(WebDriver webDriver, Document document, Pattern pattern, Boolean bool) throws Exception {
+    public WebDriver commonCraw(WebDriver webDriver, Document document, Pattern pattern, Boolean bool) throws Exception {
+        while (true) {
+            try {
+                webDriver.get((String) document.get("url"));
+                Thread.sleep(2000);
+                break;
+            } catch (Exception e) {
+                log.info("访问url出现异常切换ip");
+                webDriver = MySeleniumUtils.getProxyIpDriver();
+            }
+        }
 
-        webDriver.get((String) document.get("url"));
-        Thread.sleep(2000);
 
         while (true) {
             try {
                 WebElement element = webDriver.findElement(By.xpath("//*[text()=\"Please complete this captcha to continue\"]"));
                 log.info("出现反爬虫验证");
-//                webDriver.quit();
+                webDriver.close();
                 webDriver = MySeleniumUtils.getProxyIpDriver();
                 webDriver.get((String) document.get("url"));
                 Thread.sleep(2000);
             } catch (Exception e) {
-                log.info("未出现反爬虫验证");
                 break;
             }
         }
@@ -406,7 +413,8 @@ public class WongnaiCrawService {
                         document.put("address", x);
                     });
         } catch (Exception e) {
-
+            log.info("出现异常");
+            webDriver.close();
         }
 
         //保存联系
@@ -520,6 +528,7 @@ public class WongnaiCrawService {
 
         document.put("update_time", LocalDateTime.now());
         document.put("is_craw", true);
+        return webDriver;
     }
 
 
