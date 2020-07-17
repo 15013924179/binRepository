@@ -250,6 +250,29 @@ class CrawServiceTest {
         skyscannerCrawService.crawDetailPage();
     }
 
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPageBy1() throws Exception{
+        wongnaiCrawService.crawDetailPageResBy1();
+    }
+
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPageBy2() throws Exception{
+        wongnaiCrawService.crawDetailPageResBy2();
+    }
+
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPageBy3() throws Exception{
+        wongnaiCrawService.crawDetailPageResBy3();
+    }
+
+    //https://www.wongnai.com/
+    @Test
+    void wongnaiCrawDetailPageBy4() throws Exception{
+        wongnaiCrawService.crawDetailPageResBy4();
+    }
 
 
 }

@@ -488,11 +488,15 @@ public class WongnaiCrawService {
         //五个等级的评分
         try {
             List<WebElement> scores = webDriver.findElements(By.xpath("//*[contains(@class,\"sc-1nastw3-0 bdlWei\")]/div/div[3]"));
-            Integer score = 0;
-            for (int i = 0; i < scores.size(); i++) {
-                String s = scores.get(i).getText();
-                score = score + (Integer.parseInt(s) * (5 - i));
-                document.put("score_grade_" + (5 - i), s);
+            if (scores == null || scores.size() == 0) {
+                for (int i = 0; i < 5; i++) {
+                    document.put("score_grade_" + (5 - i), "0");
+                }
+            } else {
+                for (int i = 0; i < scores.size(); i++) {
+                    String s = scores.get(i).getText();
+                    document.put("score_grade_" + (5 - i), s);
+                }
             }
         } catch (Exception e) {
             for (int i = 0; i < 5; i++) {
@@ -529,6 +533,142 @@ public class WongnaiCrawService {
         document.put("update_time", LocalDateTime.now());
         document.put("is_craw", true);
         return webDriver;
+    }
+
+    /**
+     * 分段爬取
+     *
+     * @throws Exception
+     */
+    public void crawDetailPageResBy1() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
+        boolean bool = true;
+        for (int i = 0; i < documents.size() / 2; i++) {
+            Document document = documents.get(i);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
+
+            //保存价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[text()=\"ช่วงราคา\"]/../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("total", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            mongoTemplate.save(document, "wongnai_restaurant");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+    /**
+     * 分段爬取
+     *
+     * @throws Exception
+     */
+    public void crawDetailPageResBy2() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
+        boolean bool = true;
+        for (int i = documents.size() / 2; i > 0; i--) {
+            Document document = documents.get(i);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
+
+            //保存价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[text()=\"ช่วงราคา\"]/../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("total", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            mongoTemplate.save(document, "wongnai_restaurant");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+    /**
+     * 分段爬取
+     *
+     * @throws Exception
+     */
+    public void crawDetailPageResBy3() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
+        boolean bool = true;
+        for (int i = documents.size() / 2; i < documents.size(); i++) {
+            Document document = documents.get(i);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
+
+            //保存价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[text()=\"ช่วงราคา\"]/../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("total", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            mongoTemplate.save(document, "wongnai_restaurant");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
+    }
+
+    /**
+     * 分段爬取
+     *
+     * @throws Exception
+     */
+    public void crawDetailPageResBy4() throws Exception {
+        WebDriver webDriver = MySeleniumUtils.getProxyIpDriver();
+        log.info("开始爬取详情页");
+        Pattern pattern = Pattern.compile("[0-9|,]+");
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_craw").is(false)), Document.class, "wongnai_restaurant");
+        boolean bool = true;
+        for (int i = documents.size() - 1; i > documents.size() / 2; i--) {
+            Document document = documents.get(i);
+            webDriver = commonCraw(webDriver, document, pattern, bool);
+
+            //保存价格
+            try {
+                Optional.ofNullable(webDriver.findElement(By.xpath("//*[text()=\"ช่วงราคา\"]/../span[2]")))
+                        .map(WebElement::getText)
+                        .map(String::trim)
+                        .filter(x -> !x.isEmpty())
+                        .ifPresent(x -> {
+                            document.put("total", x);
+                        });
+            } catch (Exception e) {
+
+            }
+
+            mongoTemplate.save(document, "wongnai_restaurant");
+            log.info("当前详情页数据保存完毕");
+        }
+        log.info("详情页数据抓取完毕");
     }
 
 
