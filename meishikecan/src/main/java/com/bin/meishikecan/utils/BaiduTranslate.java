@@ -27,12 +27,16 @@ public class BaiduTranslate {
 
     private final static String securityKey = "9LO16dFteslN4OcNVmuF";
 
+    private final static String APPID2 = "20200720000522672";
+
+    private final static String securityKey2 = "Ia8QaA4sJgc8XpxyAalB";
+
     // 首先初始化一个字符数组，用来存放每个16进制字符
     private static final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
             'e', 'f'};
 
     public static String translateText(String content, String from, String to) throws Exception {
-        Thread.sleep(1000);
+
         String reponseString = null;
 
         CloseableHttpClient hc = HttpClientBuilder.create().build();
@@ -52,6 +56,48 @@ public class BaiduTranslate {
             params.add(new BasicNameValuePair("from", from));
             params.add(new BasicNameValuePair("to", to));
             params.add(new BasicNameValuePair("appid", APPID));
+            params.add(new BasicNameValuePair("salt", salt));
+            params.add(new BasicNameValuePair("sign", md5(sign)));
+
+
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            response = hc.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            reponseString = EntityUtils.toString(entity);
+            EntityUtils.consume(entity);
+            reponseString = returnResult(reponseString);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            httpPost.releaseConnection();
+        }
+
+        return reponseString;
+    }
+
+    public static String translateText2(String content, String from, String to) throws Exception {
+
+        String reponseString = null;
+
+        CloseableHttpClient hc = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost(URL);
+
+        CloseableHttpResponse response;
+        try {
+            // 随机数
+            String salt = String.valueOf(System.currentTimeMillis());
+            //appid+q+salt+密钥
+            // 签名
+            String sign = APPID2 + content + salt + securityKey2; // 加密前的原文
+
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("q", content));
+            params.add(new BasicNameValuePair("from", from));
+            params.add(new BasicNameValuePair("to", to));
+            params.add(new BasicNameValuePair("appid", APPID2));
             params.add(new BasicNameValuePair("salt", salt));
             params.add(new BasicNameValuePair("sign", md5(sign)));
 

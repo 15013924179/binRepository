@@ -27,6 +27,7 @@ public class CNChillpainaiCrawsService {
 
         for (Document document : documents) {
 
+
             long start = System.currentTimeMillis();
 
             try {
@@ -48,6 +49,7 @@ public class CNChillpainaiCrawsService {
 
                 index++;
             }catch (Exception e){
+//                e.printStackTrace();
                 log.info("翻译异常");
             }
 
