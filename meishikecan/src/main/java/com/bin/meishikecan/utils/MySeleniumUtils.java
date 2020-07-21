@@ -84,7 +84,7 @@ public class MySeleniumUtils {
     public static WebDriver getWebDriver() {
         System.setProperty("webdriver.chrome.driver", "D:\\chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("blink-settings=imagesEnabled=false");
+//        chromeOptions.addArguments("blink-settings=imagesEnabled=false");
         chromeOptions.addArguments("--start-maximized");
         // 打开或者关闭浏览器视图
         chromeOptions.addArguments("--no-sandbox");
