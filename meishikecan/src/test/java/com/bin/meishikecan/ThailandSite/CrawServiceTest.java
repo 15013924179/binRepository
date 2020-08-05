@@ -1,5 +1,6 @@
 package com.bin.meishikecan.ThailandSite;
 
+import com.bin.meishikecan.ThailandSite.taiguo.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
