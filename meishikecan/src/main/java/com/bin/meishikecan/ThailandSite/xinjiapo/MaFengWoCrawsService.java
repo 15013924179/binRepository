@@ -323,7 +323,7 @@ public class MaFengWoCrawsService {
 
                 try {
                     //評分
-                    Optional.ofNullable(webElement.findElement(By.xpath("./div[3]/ul/li[1]/em")))
+                    Optional.ofNullable(webElement.findElement(By.xpath(".//*[contains(@class,\"rating\")]/em")))
                             .map(WebElement::getText)
                             .map(String::trim)
                             .ifPresent(x -> {
@@ -332,10 +332,9 @@ public class MaFengWoCrawsService {
                 } catch (Exception e) {
                     document.put("score", "0");
                 }
-
                 try {
                     //評分数量
-                    Optional.ofNullable(webElement.findElement(By.xpath("./div[3]/ul/li[2]//em")))
+                    Optional.ofNullable(webElement.findElement(By.xpath(".//*[text()=\"蜂蜂评价\"]/em")))
                             .map(WebElement::getText)
                             .map(String::trim)
                             .ifPresent(x -> {

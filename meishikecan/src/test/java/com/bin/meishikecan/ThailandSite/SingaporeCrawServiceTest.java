@@ -87,8 +87,4 @@ public class SingaporeCrawServiceTest {
     void singaporeCtripCrawsListPage() throws Exception{
         ctripCrawsService.crawsListPageByRes();
     }
-
-
-
-
 }
