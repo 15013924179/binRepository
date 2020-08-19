@@ -345,7 +345,7 @@ public class MalaixiyaMaFengWoCrawsService {
 
         for (Document document : documents) {
             webDriver.get((String) document.get("url"));
-            Thread.sleep(2000);
+            Thread.sleep(5000);
 
             //保存联系
             try {

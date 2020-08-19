@@ -43,7 +43,7 @@ public class GoogleTranslate {
         nvps.add(new BasicNameValuePair("tl", targetLang));
         nvps.add(new BasicNameValuePair("dt", "t"));
         nvps.add(new BasicNameValuePair("q", text));
-        String resp =  postHttp( PATH,nvps);
+         String resp =  postHttp( PATH,nvps);
         if( null == resp ){
             throw  new Exception("网络异常");
         }
@@ -70,9 +70,10 @@ public class GoogleTranslate {
         HttpPost httpPost = new HttpPost( url );
 
         //设置代理IP、端口
-//        HttpHost proxy=new HttpHost("58.218.92.199",4923,"http");
-//        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
-//        httpPost.setConfig(requestConfig);
+        TranslateThreadLocal translateThreadLocal = MyThreadUtils.THREAD_LOCAL.get();
+        HttpHost proxy=new HttpHost(translateThreadLocal.getIp(),translateThreadLocal.getPort(),"http");
+        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).setSocketTimeout(10*1000).build();
+        httpPost.setConfig(requestConfig);
 
         //重要！！必须设置 http 头，否则返回为乱码
         httpPost.setHeader("User-Agent",USER_AGENT);

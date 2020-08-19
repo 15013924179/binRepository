@@ -2,10 +2,7 @@ package com.bin.meishikecan.ThailandSite;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bin.meishikecan.ThailandSite.malaixiya.MalaixiyaBookingCrawsService;
-import com.bin.meishikecan.ThailandSite.malaixiya.MalaixiyaCtripCrawService;
-import com.bin.meishikecan.ThailandSite.malaixiya.MalaixiyaMaFengWoCrawsService;
-import com.bin.meishikecan.ThailandSite.malaixiya.MalaixiyaTripadvisorCrawsService;
+import com.bin.meishikecan.ThailandSite.malaixiya.*;
 import com.bin.meishikecan.utils.ChaoJiYing;
 import com.bin.meishikecan.utils.MySeleniumUtils;
 import org.apache.commons.io.FileUtils;
@@ -37,6 +34,9 @@ public class MalaixiyaCrawServiceTest {
 
     @Autowired
     private MalaixiyaCtripCrawService malaixiyaCtripCrawService;
+
+    @Autowired
+    private MalaixiyaQyerCrawsService malaixiyaQyerCrawsService;
 
     @Test
     public void  crawTripadvisor() throws Exception{
@@ -106,12 +106,12 @@ public class MalaixiyaCrawServiceTest {
 
     @Test
     public void  crawMaFengW1o() throws Exception{
-        malaixiyaMaFengWoCrawsService.crawListPageTravel();
+        malaixiyaMaFengWoCrawsService.crawDetailPageHotel();
     }
 
     @Test
     public void  crawMaFengWo1() throws Exception{
-        malaixiyaMaFengWoCrawsService.crawListPageTravel();
+        malaixiyaMaFengWoCrawsService.crawDetailPageTravel();
     }
 
     @Test
@@ -121,7 +121,7 @@ public class MalaixiyaCrawServiceTest {
 
     @Test
     public void  crawCtrip() throws Exception{
-        malaixiyaCtripCrawService.crawListPageTravel();
+        malaixiyaCtripCrawService.crawDetailPageTravel();
     }
 
     @Test
@@ -135,6 +135,10 @@ public class MalaixiyaCrawServiceTest {
     }
 
 
+    @Test
+    public void  crawQyer() throws Exception{
+        malaixiyaQyerCrawsService.crawDetailPageTravel();
+    }
 
 
 

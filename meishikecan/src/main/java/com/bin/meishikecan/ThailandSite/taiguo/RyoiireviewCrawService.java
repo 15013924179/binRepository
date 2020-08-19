@@ -1,6 +1,9 @@
 package com.bin.meishikecan.ThailandSite.taiguo;
 
+import com.bin.meishikecan.utils.GoogleTranslate;
 import com.bin.meishikecan.utils.MySeleniumUtils;
+import com.bin.meishikecan.utils.MyThreadUtils;
+import com.bin.meishikecan.utils.ProxyHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.openqa.selenium.By;
@@ -153,4 +156,5 @@ public class RyoiireviewCrawService {
         }
         log.info("详情页数据抓取完毕");
     }
+
 }
