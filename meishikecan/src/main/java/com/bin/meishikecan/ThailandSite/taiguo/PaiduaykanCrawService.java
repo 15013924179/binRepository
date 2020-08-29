@@ -1,6 +1,9 @@
-package com.bin.meishikecan.ThailandSite;
+package com.bin.meishikecan.ThailandSite.taiguo;
 
+import com.bin.meishikecan.utils.GoogleTranslate;
 import com.bin.meishikecan.utils.MySeleniumUtils;
+import com.bin.meishikecan.utils.MyThreadUtils;
+import com.bin.meishikecan.utils.ProxyHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.openqa.selenium.By;
@@ -134,5 +137,49 @@ public class PaiduaykanCrawService {
             log.info("当前详情页数据保存完毕");
         }
         log.info("详情页数据抓取完毕");
+    }
+
+    public void translate(){
+
+        MyThreadUtils.THREAD_LOCAL.set(ProxyHttpUtils.getipAndPort());
+
+        List<Document> documents = mongoTemplate.find(new Query(Criteria.where("is_translate").is(false)), Document.class, "paiduaykan_travel");
+
+        log.info("开始翻译");
+
+        int index=1;
+
+        for (Document document : documents) {
+
+            long start = System.currentTimeMillis();
+
+            try {
+
+                String title = (String)document.get("title");
+
+                document.put("cn_title", GoogleTranslate.translateText(title,"th", "zh"));
+
+                String content = (String)document.get("content");
+
+                document.put("cn_content", GoogleTranslate.translateText(content,"th", "zh"));
+
+                document.put("is_translate",true);
+
+                mongoTemplate.save(document,"paiduaykan_travel");
+
+                long end = System.currentTimeMillis();
+
+                log.info("翻译完成个数："+index+"|当前行翻译保存完毕，共耗时："+(double)(end - start)/1000+"秒");
+
+                index++;
+            }catch (Exception e){
+                log.info("翻译异常,重新设置代理ip");
+
+                MyThreadUtils.THREAD_LOCAL.set(ProxyHttpUtils.getipAndPort());
+
+            }
+
+        }
+
     }
 }

@@ -87,9 +87,9 @@ public class MySeleniumUtils {
 //        chromeOptions.addArguments("blink-settings=imagesEnabled=false");
         chromeOptions.addArguments("--start-maximized");
         // 打开或者关闭浏览器视图
-        chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
-        chromeOptions.addArguments("--headless");
+//        chromeOptions.addArguments("--no-sandbox");
+//        chromeOptions.addArguments("--disable-dev-shm-usage");
+//        chromeOptions.addArguments("--headless");
         return new ChromeDriver(chromeOptions);
     }
 

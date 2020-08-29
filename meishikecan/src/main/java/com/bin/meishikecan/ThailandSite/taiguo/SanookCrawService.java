@@ -1,4 +1,4 @@
-package com.bin.meishikecan.ThailandSite;
+package com.bin.meishikecan.ThailandSite.taiguo;
 
 import com.bin.meishikecan.entity.SanookTravel;
 import com.bin.meishikecan.utils.MySeleniumUtils;

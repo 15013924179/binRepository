@@ -8,7 +8,8 @@ public enum  Constants {
 
     OK(20000, "OK"),
     isNotNull(40000,"参数不能为空"),
-    SystemError(50000,"系统错误");
+    SystemError(50000,"系统错误"),
+    LoginError(50001,"登录失败");
 
     private final int code;
 
