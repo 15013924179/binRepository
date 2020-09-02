@@ -57,5 +57,69 @@ public class TranslateServiceTest {
         translateService.translate("sanook_travel", list, "th", "zh");
     }
 
+    @Test
+    public void xinjiapo_tripadvisor_hotel() throws Exception {
+
+        List<String> list = new ArrayList();
+
+        list.add("title");
+        list.add("address");
+        list.add("rank");
+
+        translateService.translate("xinjiapo_tripadvisor_hotel", list, "en", "zh");
+    }
+
+    @Test
+    public void xinjiapo_tripadvisor_restaurant() throws Exception {
+
+        List<String> list = new ArrayList();
+
+        list.add("title");
+        list.add("address");
+        list.add("rank");
+
+        translateService.translate("xinjiapo_tripadvisor_restaurant", list, "en", "zh");
+    }
+
+    @Test
+    public void xinjiapo_tripadvisor_travel() throws Exception {
+
+        List<String> list = new ArrayList();
+
+        list.add("title");
+        list.add("address");
+        list.add("rank");
+
+        translateService.translate("xinjiapo_tripadvisor_travel", list, "en", "zh");
+    }
+
+    @Test
+    public void xinjiapo_trust_guide() throws Exception {
+
+        List<String> list = new ArrayList();
+
+        list.add("name");
+
+        translateService.translate("xinjiapo_trust_guide", list, "en", "zh");
+    }
+
+    @Test
+    public void xinjiapo_trust_travel_agency() throws Exception {
+
+        List<String> list = new ArrayList();
+
+        list.add("title");
+        list.add("address");
+
+        translateService.translate("xinjiapo_trust_travel_agency", list, "en", "zh");
+    }
+
+
+
+
+
+
+
+
 
 }

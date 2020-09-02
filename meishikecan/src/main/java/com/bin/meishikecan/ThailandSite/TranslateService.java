@@ -37,9 +37,16 @@ public class TranslateService {
             try {
 
                 for (String field : fields) {
+
                     String text = (String)document.get(field);
 
-                    document.put("cn_"+field, GoogleTranslate.translateText(text,translateFrom, translateTo));
+                    if (text!=null && text != "") {
+
+                        document.put("cn_"+field, GoogleTranslate.translateText(text,translateFrom, translateTo));
+
+                    }
+
+
                 }
 
                 document.put("is_translate",true);
