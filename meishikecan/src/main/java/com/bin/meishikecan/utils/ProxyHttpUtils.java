@@ -1,10 +1,11 @@
 package com.bin.meishikecan.utils;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 public class ProxyHttpUtils {
 
-    private static String url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=0&city=0&yys=0&port=1&pack=114021&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=110000,130000,230000,310000,360000,370000,500000,510000&gm=4";
+    private static String url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&pack=114021&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4";
 
     static RestTemplate restTemplate = new RestTemplate();
 
