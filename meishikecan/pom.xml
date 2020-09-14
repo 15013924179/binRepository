@@ -140,34 +140,34 @@
         </dependency>
 
         <!-- lucene核心库 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.lucene</groupId>-->
-<!--            <artifactId>lucene-core</artifactId>-->
-<!--            <version>${lucene.version}</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Lucene的查询解析器 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.lucene</groupId>-->
-<!--            <artifactId>lucene-queryparser</artifactId>-->
-<!--            <version>${lucene.version}</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; lucene的默认分词器库 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.lucene</groupId>-->
-<!--            <artifactId>lucene-analyzers-common</artifactId>-->
-<!--            <version>${lucene.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.lucene</groupId>-->
+        <!--            <artifactId>lucene-core</artifactId>-->
+        <!--            <version>${lucene.version}</version>-->
+        <!--        </dependency>-->
+        <!--        &lt;!&ndash; Lucene的查询解析器 &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.lucene</groupId>-->
+        <!--            <artifactId>lucene-queryparser</artifactId>-->
+        <!--            <version>${lucene.version}</version>-->
+        <!--        </dependency>-->
+        <!--        &lt;!&ndash; lucene的默认分词器库 &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.lucene</groupId>-->
+        <!--            <artifactId>lucene-analyzers-common</artifactId>-->
+        <!--            <version>${lucene.version}</version>-->
+        <!--        </dependency>-->
         <!-- lucene的高亮显示 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.lucene</groupId>-->
-<!--            <artifactId>lucene-highlighter</artifactId>-->
-<!--            <version>${lucene.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.directory.studio</groupId>-->
-<!--            <artifactId>org.apache.commons.io</artifactId>-->
-<!--            <version>2.4</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.lucene</groupId>-->
+        <!--            <artifactId>lucene-highlighter</artifactId>-->
+        <!--            <version>${lucene.version}</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.directory.studio</groupId>-->
+        <!--            <artifactId>org.apache.commons.io</artifactId>-->
+        <!--            <version>2.4</version>-->
+        <!--        </dependency>-->
 
         <!--elasticsearch-->
         <dependency>
@@ -255,6 +255,54 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-core</artifactId>
+            <version>0.7.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-extension</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-selenium</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-server</artifactId>
+        <version>2.18.0</version>
+        </dependency>
+
+        <!-- log4j -->
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
         </dependency>
 
 
