@@ -5,9 +5,9 @@ spring:
     #mysql 配置
     dbType: mysql
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://120.77.208.47:3306/meishikecan?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/meishikecan?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: Huang123
+    password: 123456
     # 驱动配置信息
     type: com.alibaba.druid.pool.DruidDataSource
     # 连接池的配置信息:初始化大小，最小，最大
@@ -41,9 +41,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
   redis:
-    host: 120.77.208.47
+    host: 127.0.0.1
     port: 6379
-    password: Huang123
+    password: 123456
     # 连接超时时间（毫秒）
     timeout: 1000
     jedis:
@@ -57,10 +57,10 @@ spring:
         # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1
   rabbitmq:
-    host: 120.77.208.47
+    host: 127.0.0.1
     port: 5672
     username: rabbitmq
-    password: Huang123
+    password: 123456
     #确认消息已发送到交换机(Exchange)
     publisher-confirms: true
     #确认消息已发送到队列(Queue)
@@ -68,11 +68,11 @@ spring:
   data:
     elasticsearch:
       cluster-name: my-elastic
-      cluster-nodes: 120.77.208.47:9300
+      cluster-nodes: 127.0.0.1:9300
       repositories:
         enabled: true
     mongodb:
-      host: 120.77.208.47
+      host: 127.0.0.1
       database: test
 
 mybatis:
