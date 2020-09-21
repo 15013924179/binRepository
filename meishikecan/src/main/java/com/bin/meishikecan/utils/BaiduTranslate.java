@@ -25,11 +25,11 @@ public class BaiduTranslate {
 
     private final static String URL = "http://api.fanyi.baidu.com/api/trans/vip/translate";
 
-    private final static String securityKey = "9LO16dFteslN4OcNVmuF";
+    private final static String securityKey = "";
 
-    private final static String APPID2 = "20200720000522672";
+    private final static String APPID2 = "";
 
-    private final static String securityKey2 = "Ia8QaA4sJgc8XpxyAalB";
+    private final static String securityKey2 = "";
 
     // 首先初始化一个字符数组，用来存放每个16进制字符
     private static final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',

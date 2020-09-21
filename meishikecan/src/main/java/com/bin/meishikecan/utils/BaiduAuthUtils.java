@@ -31,9 +31,9 @@ public class BaiduAuthUtils {
      */
     public static String getAuth() {
         // 官网获取的 API Key 更新为你注册的
-        String clientId = "LXrztEOzQxfef66DLIDQYpIG";
+        String clientId = "";
         // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = "gbDodnochc8jYjlAHADDgyyas9mrlmkF";
+        String clientSecret = "";
         return getAuth(clientId, clientSecret);
     }
 
