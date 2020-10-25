@@ -23,7 +23,7 @@
         <redis.version>1.4.1.RELEASE</redis.version>
         <fastjson.version>1.2.3</fastjson.version>
         <rabbitmq.version>1.5.2.RELEASE</rabbitmq.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <lucene.version>8.5.2</lucene.version>
         <httpclient.version>4.5.3</httpclient.version>
     </properties>
@@ -192,7 +192,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
         </dependency>
         <!--工具-->
         <dependency>
