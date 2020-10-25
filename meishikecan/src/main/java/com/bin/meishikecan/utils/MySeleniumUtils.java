@@ -12,6 +12,7 @@ import org.bson.Document;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -22,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Selenium 工具类
@@ -117,6 +120,31 @@ public class MySeleniumUtils {
         chromeOptions.addArguments("--proxy-server=http://" + ip);
         log.info("代理ip：" + ip);
         return new ChromeDriver(chromeOptions);
+    }
+
+    /**
+     * 修改下载路径的Driver
+     *
+     */
+    public static WebDriver getAddressDriver(String downloadsPath) {
+
+        System.setProperty("webdriver.chrome.driver", "D:\\chromedriver.exe");
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("blink-settings=imagesEnabled=false");
+        chromeOptions.addArguments("--start-maximized");
+        // 打开或者关闭浏览器视图
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
+        chromeOptions.addArguments("--headless");
+
+        Map<String, Object> chromePrefs = new HashMap<>();
+        chromePrefs.put("download.default_directory", downloadsPath);
+        chromeOptions.setExperimentalOption("prefs", chromePrefs);
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+        return new ChromeDriver(caps);
+
+
     }
 
 
